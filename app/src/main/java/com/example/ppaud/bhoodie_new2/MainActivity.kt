@@ -16,13 +16,13 @@ class MainActivity : AppCompatActivity() {
     fun shape_roundedrectbut()= GradientDrawable().apply{
         shape= GradientDrawable.RECTANGLE
         cornerRadius=200f
-        setColor(Color.parseColor("#ff4500"))
+        setColor(Color.parseColor("#FF4081"))
         setStroke(2, Color.parseColor("#d06666"))
     }
     fun shape_roundeddialog()= GradientDrawable().apply{
         shape= GradientDrawable.RECTANGLE
         cornerRadius=0f
-        setColor(Color.parseColor("#ffffff"))
+        setColor(Color.parseColor("#474747"))
         setStroke(5, Color.parseColor("#d06666"))
     }
 
