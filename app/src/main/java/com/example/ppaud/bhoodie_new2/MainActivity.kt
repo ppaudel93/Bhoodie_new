@@ -1,6 +1,7 @@
 package com.example.ppaud.bhoodie_new2
 
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -16,13 +17,15 @@ class MainActivity : AppCompatActivity() {
     fun shape_roundedrectbut()= GradientDrawable().apply{
         shape= GradientDrawable.RECTANGLE
         cornerRadius=200f
-        setColor(Color.parseColor("#FF4081"))
+        setColor(getColor(R.color.colorAccent))
+        //setColor(Color.parseColor("#FF4081"))
         setStroke(2, Color.parseColor("#d06666"))
     }
     fun shape_roundeddialog()= GradientDrawable().apply{
         shape= GradientDrawable.RECTANGLE
-        cornerRadius=0f
-        setColor(Color.parseColor("#474747"))
+        cornerRadius=30f
+        setColor(getColor(R.color.colorPrimaryDark))
+        //setColor(Color.parseColor("#474747"))
         setStroke(5, Color.parseColor("#d06666"))
     }
 
@@ -59,6 +62,7 @@ class MainActivity : AppCompatActivity() {
                 text = getString(R.string.login)
                 textSize=20f
                 allCaps=false
+                textColor=getColor(R.color.textprimary)
                 gravity= Gravity.CENTER
                 background=shape_roundedrectbut()
                 setOnClickListener{
@@ -75,6 +79,7 @@ class MainActivity : AppCompatActivity() {
                 textSize=20f
                 allCaps=false
                 gravity= Gravity.CENTER
+                textColor=getColor(R.color.textprimary)
                 background=shape_roundedrectbut()
                 setOnClickListener(){
                     alert(){
