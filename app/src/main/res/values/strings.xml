@@ -3,4 +3,12 @@
     <string name="title_activity_maps">Map</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
+    <string name="recommend">Recommend</string>
+    <string name="abtus">About Us</string>
+    <string name="fav">Favourites</string>
+    <string name="showmap">Show Map</string>
+    <string name="userinfo">Profile</string>
+    <string name="title_activity_recommendation">Recommendation</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

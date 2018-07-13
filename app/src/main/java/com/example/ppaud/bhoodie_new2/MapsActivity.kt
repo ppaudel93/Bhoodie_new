@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.location.Location
 import android.location.LocationManager
@@ -17,17 +18,16 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
+import android.support.design.widget.NavigationView
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v4.widget.DrawerLayout
 import android.util.Log
 import android.view.Gravity
+import android.view.MenuItem
 import android.view.View
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.SearchView
-import android.widget.Toast
-import com.example.ppaud.bhoodie_new2.R.id.adjust_width
-import com.example.ppaud.bhoodie_new2.R.id.mapsearch
+import android.widget.*
+import com.example.ppaud.bhoodie_new2.R.id.*
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import org.jetbrains.anko.*
@@ -62,6 +62,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var locationNetwork: Location? = null
     private lateinit var userlocation: Location
     private lateinit var userlocationlatLng: LatLng
+    private lateinit var mDrawerLayout: DrawerLayout
 
 
     //private lateinit var currentlocation: LatLng
@@ -70,19 +71,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     fun shape_roundeddialog()= GradientDrawable().apply{
         shape= GradientDrawable.RECTANGLE
         cornerRadius=0f
-        setColor(Color.parseColor("#474747"))
+        setColor(getColor(R.color.colorPrimaryDark))
+        //setColor(Color.parseColor("#474747"))
         setStroke(5, Color.parseColor("#d06666"))
     }
     fun shape_roundedrectbut()= GradientDrawable().apply{
         shape= GradientDrawable.RECTANGLE
         cornerRadius=200f
-        setColor(Color.parseColor("#FF4081"))
+        setColor(getColor(R.color.colorPrimary))
         setStroke(2, Color.parseColor("#d06666"))
     }
     fun shape_rectbut(): GradientDrawable = GradientDrawable().apply{
         shape= GradientDrawable.RECTANGLE
         cornerRadius=0f
-        setColor(Color.parseColor("#FF4081"))
+        setColor(getColor(R.color.colorPrimary))
         setStroke(2, Color.parseColor("#d06666"))
     }
     fun startRepeatingTask(){
@@ -115,27 +117,28 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             {
                 mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney").snippet("Test Restaurant").icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
                 mMap.setOnMarkerClickListener {
-                    alert(){
-                        customView() {
-
+                    alert{
+                        customView {
                             linearLayout {
+                                this.gravity=Gravity.CENTER
                                 //orientation=LinearLayout.HORIZONTAL
                                 background=shape_roundeddialog()
                                 //bottomPadding=dip(20)
                                 button {
-                                    width=dip(50)
-                                    height=dip(50)
-                                    text="info"
+                                    //text="info"
                                     textSize=20f
                                     gravity=Gravity.CENTER
                                     allCaps=false
-                                    background=shape_rectbut()
+                                    background=shape_roundedrectbut()
+                                    backgroundDrawable=ContextCompat.getDrawable(context,R.drawable.if_info_372922)
+                                    //this.setBackgroundResource(R.drawable.if_info_372922)
                                     setOnClickListener {
 
                                     }
                                 }.lparams(){
-                                    width=dip(50)
-                                    height=dip(50)
+                                    width=dip(45)
+                                    height=dip(45)
+                                    rightMargin=dip(15)
 
                                 }
                                 button {
@@ -145,13 +148,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                     textSize=20f
                                     gravity=Gravity.CENTER
                                     allCaps=false
-                                    background=shape_rectbut()
+                                    background=shape_roundedrectbut()
                                     setOnClickListener {
 
                                     }
                                 }.lparams(){
                                     width=dip(50)
                                     height=dip(50)
+                                    leftMargin=dip(15)
+                                    rightMargin=dip(15)
 
                                 }
                                 button {
@@ -161,19 +166,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                     textSize=20f
                                     gravity=Gravity.CENTER
                                     allCaps=false
-                                    background=shape_rectbut()
+                                    background=shape_roundedrectbut()
                                     setOnClickListener {
 
                                     }
                                 }.lparams(){
                                     width=dip(50)
                                     height=dip(50)
+                                    leftMargin=dip(15)
 
                                 }
 
 
-                            }
+                            }//.apply { window.setLayout(wrap_content, wrap_content) }
                         }
+                        //apply { window.setLayout(wrap_content, wrap_content) }
                     }.show()
                     return@setOnMarkerClickListener false
                 }
@@ -190,6 +197,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         setContentView(R.layout.activity_maps)
         //createLocationRequest()
         //fusedLocationClient= LocationServices.getFusedLocationProviderClient(this)
+        mDrawerLayout=findViewById(R.id.drawer_layout)
+        val navigationView: NavigationView=findViewById(R.id.nav_view)
+        navigationView.setNavigationItemSelectedListener {
+            it.isChecked = true
+            if (it.itemId == recommend_id)
+                startActivity<Recommendation>()
+            if (it.itemId== show_map)
+                mDrawerLayout.closeDrawers()
+
+            mDrawerLayout.closeDrawers()
+            true
+        }
         mapsearch.background=shape_roundedrect()
         b= Bitmap.createBitmap(BitmapFactory.decodeResource(resources,R.drawable.foodmarker))
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
