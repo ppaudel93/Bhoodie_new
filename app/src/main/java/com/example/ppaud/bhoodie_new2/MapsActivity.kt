@@ -7,7 +7,9 @@ import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Camera
 import android.graphics.Color
+import android.graphics.Color.RED
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.location.Location
@@ -26,7 +28,9 @@ import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
+import com.beust.klaxon.*
 import com.example.ppaud.bhoodie_new2.R.id.*
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
@@ -36,12 +40,17 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
+import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_maps.*
+import okhttp3.*
+import org.json.JSONObject
+import java.io.IOException
+import java.io.StringReader
+import java.net.URL
 import java.util.jar.Manifest
+import java.util.regex.Pattern
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     fun shape_roundedrect()= GradientDrawable().apply{
@@ -53,6 +62,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private val sydney=LatLng(-34.0, 151.0)
+    private val opera = LatLng(-33.9320447,151.1597271)
     private val LOCATION_REQUEST_CODE=101
     private lateinit var b: Bitmap
     lateinit var locationManager: LocationManager
@@ -63,6 +73,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var userlocation: Location
     private lateinit var userlocationlatLng: LatLng
     private lateinit var mDrawerLayout: DrawerLayout
+    private var options= PolylineOptions()
+    private var points: ArrayList<LatLng> = ArrayList(50)
 
 
     //private lateinit var currentlocation: LatLng
@@ -94,6 +106,107 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         Handler().removeCallbacks(mStatusChecker)
     }
 
+    private fun getURL(from: LatLng,to: LatLng): String{
+        val origin = "origin="+from.latitude+","+from.longitude
+        val dest="destination="+to.latitude+","+to.longitude
+        val sensor = "sensor=false"
+        val params = "$origin&$dest&$sensor"
+        val output = "json"
+        Log.i("urlbro","https://maps.googleapis.com/maps/api/directions/json?$params")
+        return "https://maps.googleapis.com/maps/api/directions/json?$params"
+    }
+    class End_location(val lat: Double,val lng: Double)
+
+    class Start_location(val lat: Double,val lng: Double)
+
+    class Distance(val text: String, val value: Int)
+
+    class Duration(val text: String, val value: Int)
+
+    class Steps(val distance: Distance, val duration: Duration, val end_location: End_location,val start_location: Start_location, val travel_mode: String)
+
+    class Legs(val steps: List<Steps>)
+
+    class Routes(val legs: List<Legs>)
+
+    class directionmain(val routes: List<Routes>)
+
+    private fun getdirections(){
+        val url = getURL(sydney,opera)
+        val request = Request.Builder().url(url).build()
+
+        val client = OkHttpClient()
+        client.newCall(request).enqueue(object: Callback{
+            override fun onFailure(call: Call?, e: IOException?) {
+                println("Failed to execute request")
+            }
+
+            override fun onResponse(call: Call?, response: Response?) {
+                val body=response?.body()?.string()
+                //println(body)
+
+                val gson = GsonBuilder().create()
+                val Directionmain=gson.fromJson(body, directionmain::class.java)
+                val temproute=Directionmain.routes
+                val templeg=temproute[0].legs
+                val directionsteps = templeg[0].steps
+                var templist: ArrayList<Double> =ArrayList(50)
+                var startinglatlng: ArrayList<LatLng> = ArrayList(50)
+                var endingLatLng: ArrayList<LatLng> = ArrayList(50 )
+                //var points: ArrayList<LatLng> = ArrayList(50)
+                var loopint: Int=0
+                for(item in directionsteps){
+                    templist.add(item.start_location.lat)
+                    points.add(LatLng(item.start_location.lat,item.start_location.lng))
+                    points.add(LatLng(item.end_location.lat,item.end_location.lng))
+                    //startinglatlng.add(LatLng(item.start_location.lat,item.start_location.lng))
+                    //endingLatLng.add(LatLng(item.end_location.lat,item.end_location.lng))
+//                    var polyline: Polyline =mMap.addPolyline(PolylineOptions().clickable(false).color(RED).add(
+//                            startinglatlng,endingLatLng
+//                  ))
+
+                }
+                //val options = PolylineOptions()
+                options.color(Color.RED)
+                options.width(5f)
+                options.clickable(false)
+                options.add(sydney).addAll(points).add(opera)
+                //for(item in points) options.add(item)
+                //mMap!!.addPolyline(options)
+
+//                while(directionsteps?.isNotEmpty()){
+//                    startinglatlng= LatLng(directionsteps[loopint].start_location.lat,directionsteps[loopint].start_location.lng)
+//                    endingLatLng= LatLng(directionsteps[loopint].end_location.lat,directionsteps[loopint].end_location.lng)
+//                    var polyline: Polyline =mMap.addPolyline(PolylineOptions().clickable(false).color(RED).add(
+//                            startinglatlng,endingLatLng
+//                    ))
+//                    directionsteps[loopint]==null
+//                    loopint++
+//
+//                }
+
+//                directionsteps?.forEach {
+//                    val asd=directionsteps[loopint].start_location.lat
+//                    lats[loopint]=directionsteps[loopint].start_location.lat
+//                    longs[loopint]=directionsteps[loopint].start_location.lng
+//                    loopint=loopint+1
+//
+//                }
+                //val stepsarray=gson.fromJson(body,Steps::class.java)
+            }
+
+        })
+//        doAsync {
+//            val result = URL(url).readText()
+//            uiThread {
+//                //Log.i("Request", result)
+//                val gson = GsonBuilder().create()
+//                val routes = gson.fromJson(result,routes::class.java)
+//                println(routes)
+//            }
+//        }
+    }
+
     private fun requestPermission(permissionType: String,requestCode: Int){
         ActivityCompat.requestPermissions(this, arrayOf(permissionType),requestCode)
     }
@@ -116,11 +229,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             if (mMap.cameraPosition.zoom>7.0)
             {
                 mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney").snippet("Test Restaurant").icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
+                mMap.addMarker(MarkerOptions().position(opera).title("Opera House"))
                 mMap.setOnMarkerClickListener {
                     alert{
                         customView {
                             linearLayout {
                                 this.gravity=Gravity.CENTER
+
                                 //orientation=LinearLayout.HORIZONTAL
                                 background=shape_roundeddialog()
                                 //bottomPadding=dip(20)
@@ -131,54 +246,57 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                     allCaps=false
                                     background=shape_roundedrectbut()
                                     backgroundDrawable=ContextCompat.getDrawable(context,R.drawable.if_info_372922)
-                                    //this.setBackgroundResource(R.drawable.if_info_372922)
                                     setOnClickListener {
 
                                     }
                                 }.lparams(){
-                                    width=dip(45)
-                                    height=dip(45)
-                                    rightMargin=dip(15)
+                                    width=dip(40)
+                                    height=dip(40)
+                                    rightMargin=dip(25)
+                                    topMargin=dip(5)
+                                    bottomMargin=dip(5)
 
                                 }
                                 button {
-                                    width=dip(50)
-                                    height=dip(50)
-                                    text="chat"
+                                    //text="chat"
                                     textSize=20f
                                     gravity=Gravity.CENTER
                                     allCaps=false
                                     background=shape_roundedrectbut()
+                                    backgroundDrawable=ContextCompat.getDrawable(context,R.drawable.if_untitled_2_36_536270)
                                     setOnClickListener {
 
                                     }
                                 }.lparams(){
-                                    width=dip(50)
-                                    height=dip(50)
-                                    leftMargin=dip(15)
-                                    rightMargin=dip(15)
+                                    width=dip(40)
+                                    height=dip(40)
+                                    leftMargin=dip(25)
+                                    rightMargin=dip(25)
+                                    topMargin=dip(5)
+                                    bottomMargin=dip(5)
 
                                 }
                                 button {
-                                    width=dip(50)
-                                    height=dip(50)
-                                    text="direct"
+                                    //text="direct"
                                     textSize=20f
                                     gravity=Gravity.CENTER
                                     allCaps=false
                                     background=shape_roundedrectbut()
+                                    backgroundDrawable=ContextCompat.getDrawable(context,R.drawable.icons8_waypoint_map_50)
                                     setOnClickListener {
 
                                     }
                                 }.lparams(){
-                                    width=dip(50)
-                                    height=dip(50)
-                                    leftMargin=dip(15)
+                                    width=dip(40)
+                                    height=dip(40)
+                                    leftMargin=dip(25)
+                                    topMargin=dip(5)
+                                    bottomMargin=dip(5)
 
                                 }
 
 
-                            }//.apply { window.setLayout(wrap_content, wrap_content) }
+                            }//.layoutParams= LinearLayout.LayoutParams(wrap_content, wrap_content)
                         }
                         //apply { window.setLayout(wrap_content, wrap_content) }
                     }.show()
@@ -333,5 +451,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         }
         startRepeatingTask()
+        getdirections()
+        //val option2 = PolylineOptions().add(sydney,LatLng(-34.0001918,150.9985159), LatLng(-33.99960780000001,150.9980761)).add(LatLng(-33.9991642,150.9982047)).color(RED).width(10f)
+        val option2 = PolylineOptions().add(sydney)
+        for (item in points) option2.add(item)
+        points.add(opera)
+        //, LatLng(-33.9991642,150.9982047)
+        val polyline: Polyline=mMap!!.addPolyline(option2)
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
 }
