@@ -42,6 +42,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_maps.*
 import okhttp3.*
@@ -51,6 +52,7 @@ import java.io.StringReader
 import java.net.URL
 import java.util.jar.Manifest
 import java.util.regex.Pattern
+import kotlin.concurrent.fixedRateTimer
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     fun shape_roundedrect()= GradientDrawable().apply{
@@ -74,11 +76,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var userlocationlatLng: LatLng
     private lateinit var mDrawerLayout: DrawerLayout
     private var options= PolylineOptions()
+    private var defaulturl = "https://bhoodie.herokuapp.com"
     private var points: ArrayList<LatLng> = ArrayList(50)
 
-
-    //private lateinit var currentlocation: LatLng
-    //private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     fun shape_roundeddialog()= GradientDrawable().apply{
         shape= GradientDrawable.RECTANGLE
@@ -106,6 +106,33 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         Handler().removeCallbacks(mStatusChecker)
     }
 
+    private fun senduserlocation(userlocation: LatLng){
+        val json="""
+            "location":{
+                "lat":"${userlocation.latitude}",
+                "lon":"${userlocation.longitude}"
+                }
+        """.trimIndent()
+        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),json)
+        //val loc= Gson().fromJson(json,userloc::class.java)
+        //val request = Request.Builder().url(defaulturl+"/apis/").post(body).build()
+        val request = Request.Builder().url(defaulturl+"/apis/?lat=${userlocation.latitude}&lon=${userlocation.longitude}").build()
+        val client = OkHttpClient()
+        client.newCall(request).enqueue(object: Callback{
+            override fun onFailure(call: Call?, e: IOException?) {
+
+            }
+
+            override fun onResponse(call: Call?, response: Response?) {
+
+            }
+
+        })
+//        val client=OkHttpClient()
+//        val response=client.newCall(request).execute()
+
+    }
+
     private fun getURL(from: LatLng,to: LatLng): String{
         val origin = "origin="+from.latitude+","+from.longitude
         val dest="destination="+to.latitude+","+to.longitude
@@ -115,6 +142,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         Log.i("urlbro","https://maps.googleapis.com/maps/api/directions/json?$params")
         return "https://maps.googleapis.com/maps/api/directions/json?$params"
     }
+    class userloc(val lat: Double,val lon: Double)
+
     class End_location(val lat: Double,val lng: Double)
 
     class Start_location(val lat: Double,val lng: Double)
@@ -136,6 +165,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val request = Request.Builder().url(url).build()
 
         val client = OkHttpClient()
+
+
+
         client.newCall(request).enqueue(object: Callback{
             override fun onFailure(call: Call?, e: IOException?) {
                 println("Failed to execute request")
@@ -158,7 +190,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 for(item in directionsteps){
                     templist.add(item.start_location.lat)
                     points.add(LatLng(item.start_location.lat,item.start_location.lng))
-                    points.add(LatLng(item.end_location.lat,item.end_location.lng))
+                    //points.add(LatLng(item.end_location.lat,item.end_location.lng))
                     //startinglatlng.add(LatLng(item.start_location.lat,item.start_location.lng))
                     //endingLatLng.add(LatLng(item.end_location.lat,item.end_location.lng))
 //                    var polyline: Polyline =mMap.addPolyline(PolylineOptions().clickable(false).color(RED).add(
@@ -168,7 +200,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
                 //val options = PolylineOptions()
                 options.color(Color.RED)
-                options.width(5f)
+                options.width(10f)
                 options.clickable(false)
                 options.add(sydney).addAll(points).add(opera)
                 //for(item in points) options.add(item)
@@ -450,14 +482,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
         }
+        val timer= fixedRateTimer(name="locationsender",initialDelay = 20000,period=10000000){
+            senduserlocation(LatLng(userlocation.latitude,userlocation.longitude))
+
+        }
         startRepeatingTask()
         getdirections()
         //val option2 = PolylineOptions().add(sydney,LatLng(-34.0001918,150.9985159), LatLng(-33.99960780000001,150.9980761)).add(LatLng(-33.9991642,150.9982047)).color(RED).width(10f)
-        val option2 = PolylineOptions().add(sydney)
-        for (item in points) option2.add(item)
-        points.add(opera)
+        var option2 = PolylineOptions()
+        option2=options
+        //option2=options
+//        option2.apply {
+//            add(sydney).addAll(points).add(opera)
+//        }
+        //or (item in points) option2.add(item)
+        //points.add(opera)
         //, LatLng(-33.9991642,150.9982047)
         val polyline: Polyline=mMap!!.addPolyline(option2)
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
 }
