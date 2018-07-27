@@ -7,4 +7,5 @@
     <color name="fullwhite">#ffffff</color>
     <color name="black_overlay">#66000000</color>
     <color name="transparent">#fff</color>
+    <color name="strokecolor">#d06666</color>
 </resources>

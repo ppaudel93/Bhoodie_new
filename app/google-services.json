@@ -8,50 +8,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:650361952067:android:e3ca39c899a81702",
-        "android_client_info": {
-          "package_name": "com.bhoodie.majorproject.bhoodie"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "650361952067-d9n08v18lpc83tf49423934b9bqmifsu.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.bhoodie.majorproject.bhoodie",
-            "certificate_hash": "1d5bde7ba49fcb88de36e81bea127881b095fced"
-          }
-        },
-        {
-          "client_id": "650361952067-n3svpv620c0uo8i1vktirtc1ftrv0e81.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBpZgR-3pCIMFnRZyM0Jhggo63n0nRhTYc"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "650361952067-n3svpv620c0uo8i1vktirtc1ftrv0e81.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:650361952067:android:d8a2daf893f19863",
         "android_client_info": {
           "package_name": "com.example.ppaud.bhoodie_new2"
