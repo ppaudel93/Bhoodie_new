@@ -73,10 +73,13 @@ class MainActivity : AppCompatActivity() {
         mAuth=FirebaseAuth.getInstance()
         loginbutton.setOnClickListener {
             mAuth.signInWithEmailAndPassword(emaillogin.text.toString(),passwordlogin.text.toString())
-                            .addOnCompleteListener{
+                                .addOnCompleteListener{
                                 if(it.isSuccessful){
                                     Log.i("user_login","Logged In Successfully")
                                     user= mAuth.currentUser!!
+                                    Toast.makeText(this@MainActivity,"Logged in as ${user!!.email.toString()}",Toast.LENGTH_LONG).show()
+                                    startActivity<MapsActivity>()
+                                    finish()
 
                                 }
                                 else{
@@ -107,6 +110,22 @@ class MainActivity : AppCompatActivity() {
                                                         Toast.makeText(this@MainActivity,"New User Created",Toast.LENGTH_LONG).show()
                                                         user = mAuth.currentUser
                                                         dialog.dismiss()
+                                                        mAuth.signInWithEmailAndPassword(view.registeremail.text.toString(),view.registerpass.text.toString())
+                                                                .addOnCompleteListener{
+                                                                    if(it.isSuccessful){
+                                                                        Log.i("user_login","Logged In Successfully")
+                                                                        user= mAuth.currentUser!!
+                                                                        Toast.makeText(this@MainActivity,"Logged in as ${user!!.email.toString()}",Toast.LENGTH_LONG).show()
+                                                                        startActivity<MapsActivity>()
+                                                                        finish()
+
+                                                                    }
+                                                                    else{
+                                                                        Log.i("user_login","Login Failed")
+
+                                                                    }
+                                                                }
+
                                                     }
                                                     else{
                                                         Log.i("task_failed","User Creation falied")
