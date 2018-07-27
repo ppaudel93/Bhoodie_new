@@ -26,6 +26,7 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AlertDialog
+import android.text.Editable
 import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
@@ -80,6 +81,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mDrawerLayout: DrawerLayout
     private var defaulturl = "https://bhoodie.herokuapp.com"
     private var points: ArrayList<LatLng> = ArrayList(50)
+    private var Results: List<Result> = ArrayList(50)
 
     fun startRepeatingTask(){
         mStatusChecker.run()
@@ -89,28 +91,24 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun senduserlocation(userlocation: LatLng){
-        val json="""
-            "location":{
-                "lat":"${userlocation.latitude}",
-                "lon":"${userlocation.longitude}"
+            val request = Request.Builder().url(defaulturl+"/api/places/lat=${userlocation.latitude}&long=${userlocation.longitude}").build()
+            val client = OkHttpClient()
+            client.newCall(request).enqueue(object: Callback{
+                override fun onFailure(call: Call?, e: IOException?) {
+
                 }
-        """.trimIndent()
-        val body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),json)
-        //val loc= Gson().fromJson(json,userloc::class.java)
-        //val request = Request.Builder().url(defaulturl+"/apis/").post(body).build()
-        val request = Request.Builder().url(defaulturl+"/apis/?lat=${userlocation.latitude}&lon=${userlocation.longitude}").build()
-        val client = OkHttpClient()
-        client.newCall(request).enqueue(object: Callback{
-            override fun onFailure(call: Call?, e: IOException?) {
 
-            }
+                override fun onResponse(call: Call?, response: Response?) {
+                    val body=response?.body()?.string()
+                    val gson = GsonBuilder().create()
+                    val Mainclass = gson.fromJson(body,mainclass::class.java)
+                    Results = Mainclass.results
 
-            override fun onResponse(call: Call?, response: Response?) {
-                val body=response?.body()?.string()
+                }
 
-            }
+            })
 
-        })
+
 //        val client=OkHttpClient()
 //        val response=client.newCall(request).execute()
 
@@ -125,7 +123,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         Log.i("urlbro","https://maps.googleapis.com/maps/api/directions/json?$params")
         return "https://maps.googleapis.com/maps/api/directions/json?$params"
     }
-    class userloc(val lat: Double,val lon: Double)
+    class placeloc(val lat: Double,val lng: Double)
+
+    class mainclass(val results: List<Result>)
+
+    class Result(val id: String,val name: String,val location: placeloc,val open: Boolean,val rating: Float)
 
     class End_location(val lat: Double,val lng: Double)
 
@@ -202,6 +204,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         override fun run(){
             if (mMap!!.cameraPosition.zoom>7.0)
             {
+
                 mMap!!.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney").snippet("Test Restaurant").icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
 //                mMap!!.addMarker(MarkerOptions().position(LatLng(27.713289,85.312888)).title("Gaia Restaurant & Coffee Shop").icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
 //                mMap!!.addMarker(MarkerOptions().position(LatLng(27.6796815,85.31903369999999)).title("The Embers Restaurant").icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
@@ -217,22 +220,39 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 //                mMap!!.addMarker(MarkerOptions().position(LatLng(27.691692, 85.316602)).title("KFC Restaurant").icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
 //                mMap!!.addMarker(MarkerOptions().position(LatLng(27.688281, 85.308598)).title("Shabri The Restaurant").icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
 //                mMap!!.addMarker(MarkerOptions().position(LatLng(27.685964, 85.306917)).title("Momotarou Restaurant").icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
-
-                mMap!!.addMarker(MarkerOptions().position(opera).title("Opera House"))
-                mMap!!.setOnMarkerClickListener {
-                    val view = View.inflate(this@MapsActivity,R.layout.mapsdialogbox,null)
-                    val builder = AlertDialog.Builder(this@MapsActivity)
-                    builder.setView(view)
-                    val dialog: AlertDialog = builder.create()
-                    dialog.show()
-                    dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                    val destination: LatLng = it.position
-                    view.directionbutton.setOnClickListener {
-                        getdirections(LatLng(userlocation!!.latitude,userlocation!!.longitude),destination)
-                        dialog.dismiss()
+                for (item in Results){
+                    mMap!!.addMarker(MarkerOptions().position(LatLng(item.location.lat,item.location.lng)).title(item.name).icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
+                    mMap!!.setOnMarkerClickListener {
+                        val view = View.inflate(this@MapsActivity,R.layout.mapsdialogbox,null)
+                        val builder = AlertDialog.Builder(this@MapsActivity)
+                        builder.setView(view)
+                        val dialog: AlertDialog = builder.create()
+                        dialog.show()
+                        dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                        view.placename.text=it.title
+                        val destination: LatLng = it.position
+                        view.directionbutton.setOnClickListener {
+                            getdirections(LatLng(userlocation!!.latitude,userlocation!!.longitude),destination)
+                            dialog.dismiss()
+                        }
+                        return@setOnMarkerClickListener false
                     }
-                    return@setOnMarkerClickListener false
                 }
+//                mMap!!.addMarker(MarkerOptions().position(opera).title("Opera House"))
+//                mMap!!.setOnMarkerClickListener {
+//                    val view = View.inflate(this@MapsActivity,R.layout.mapsdialogbox,null)
+//                    val builder = AlertDialog.Builder(this@MapsActivity)
+//                    builder.setView(view)
+//                    val dialog: AlertDialog = builder.create()
+//                    dialog.show()
+//                    dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+//                    val destination: LatLng = it.position
+//                    view.directionbutton.setOnClickListener {
+//                        getdirections(LatLng(userlocation!!.latitude,userlocation!!.longitude),destination)
+//                        dialog.dismiss()
+//                    }
+//                    return@setOnMarkerClickListener false
+//                }
             }
             else
             {mMap!!.clear()}
@@ -359,7 +379,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
         }
-        val timer= fixedRateTimer(name="locationsender",initialDelay = 20000,period=10000000){
+        val timer= fixedRateTimer(name="locationsender",initialDelay = 10000,period=10000000){
             senduserlocation(LatLng(userlocation!!.latitude,userlocation!!.longitude))
 
         }

@@ -19,6 +19,8 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.registerdialog.*
 import kotlinx.android.synthetic.main.registerdialog.view.*
@@ -46,10 +48,13 @@ class MainActivity : AppCompatActivity() {
     }
     private val RC_SIGN_IN = 123
     var mAuth = FirebaseAuth.getInstance()!!
+    lateinit var mDatabase: DatabaseReference
     var user: FirebaseUser? = null
     fun showSnackbar(id: Int,layout: LinearLayout){
         Snackbar.make(layout,resources.getString(id),Snackbar.LENGTH_LONG).show()
     }
+
+    class userinfo(email: String,name: String,key: String)
 
     override fun onStart() {
         super.onStart()
@@ -62,6 +67,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val view = View.inflate(this,R.layout.registerdialog,null)
+//        myRef.setValue("Hello").addOnSuccessListener {
+//            Log.i("pushsuccessful","push is successful")
+//        }.addOnFailureListener {
+//            Log.i("pushfailed","push has failed")
+//        }
         emaillogin.background=shape_roundedrect()
         passwordlogin.background=shape_roundedrect()
         loginbutton.background=shape_roundedrectbut()
@@ -107,8 +117,11 @@ class MainActivity : AppCompatActivity() {
                                                 .addOnCompleteListener {
                                                     if (it.isSuccessful){
                                                         Log.i("task_successful","New User created")
+                                                        //val mD = FirebaseDatabase.getInstance().getReference("users")
                                                         Toast.makeText(this@MainActivity,"New User Created",Toast.LENGTH_LONG).show()
                                                         user = mAuth.currentUser
+                                                        //val newuser: userinfo = userinfo(view.registeremail.text.toString(),view.dialogname.text.toString(),user!!.uid)
+                                                        //mD.child(user!!.uid).setValue(newuser)
                                                         dialog.dismiss()
                                                         mAuth.signInWithEmailAndPassword(view.registeremail.text.toString(),view.registerpass.text.toString())
                                                                 .addOnCompleteListener{
