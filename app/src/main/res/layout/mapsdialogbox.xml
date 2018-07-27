@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/rounddialog"
+    android:layout_gravity="center">
+
+    <ImageButton
+        android:id="@+id/placeinfobutton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:textSize="20sp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/if_info_372922" />
+
+    <ImageButton
+        android:id="@+id/chatbutton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:textSize="20sp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/if_untitled_2_36_536270" />
+
+    <ImageButton
+        android:id="@+id/directionbutton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:textSize="20sp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/icons8_waypoint_map_50" />
+
+</LinearLayout>
