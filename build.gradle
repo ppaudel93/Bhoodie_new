@@ -7,6 +7,9 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven{
+            url "https://dl.bintray.com/hendraanggrian/pikasso"
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.3'
