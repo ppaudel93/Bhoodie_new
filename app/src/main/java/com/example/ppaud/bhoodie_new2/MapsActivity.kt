@@ -82,6 +82,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var defaulturl = "https://bhoodie.herokuapp.com"
     private var points: ArrayList<LatLng> = ArrayList(50)
     private var Results: List<Result> = ArrayList(50)
+    private lateinit var tempid: String
 
     fun startRepeatingTask(){
         mStatusChecker.run()
@@ -223,6 +224,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 for (item in Results){
                     mMap!!.addMarker(MarkerOptions().position(LatLng(item.location.lat,item.location.lng)).title(item.name).icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
                     mMap!!.setOnMarkerClickListener {
+                        for(result in Results){
+                            if (it.title==result.name){
+                                tempid = result.id
+                            }
+                        }
                         val view = View.inflate(this@MapsActivity,R.layout.mapsdialogbox,null)
                         val builder = AlertDialog.Builder(this@MapsActivity)
                         builder.setView(view)
@@ -234,6 +240,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         view.directionbutton.setOnClickListener {
                             getdirections(LatLng(userlocation!!.latitude,userlocation!!.longitude),destination)
                             dialog.dismiss()
+                        }
+                        view.placeinfobutton.setOnClickListener {
+                            Log.i("placeid","The Placeid is $tempid")
+                            val intent = Intent(this@MapsActivity,PlaceInfo::class.java)
+                            intent.putExtra("placeid",tempid)
+                            dialog.dismiss()
+                            startActivity(intent)
                         }
                         return@setOnMarkerClickListener false
                     }
