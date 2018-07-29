@@ -83,6 +83,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var points: ArrayList<LatLng> = ArrayList(50)
     private var Results: List<Result> = ArrayList(50)
     private lateinit var tempid: String
+    private lateinit var temprating: String
+    private var openornot: Boolean = false
 
     fun startRepeatingTask(){
         mStatusChecker.run()
@@ -207,26 +209,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             {
 
                 mMap!!.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney").snippet("Test Restaurant").icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
-//                mMap!!.addMarker(MarkerOptions().position(LatLng(27.713289,85.312888)).title("Gaia Restaurant & Coffee Shop").icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
-//                mMap!!.addMarker(MarkerOptions().position(LatLng(27.6796815,85.31903369999999)).title("The Embers Restaurant").icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
-//                mMap!!.addMarker(MarkerOptions().position(LatLng(27.7158428,85.3095554)).title("Places Restaurant & Bar").icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
-//                mMap!!.addMarker(MarkerOptions().position(LatLng(27.7143677,85.324899)).title("1905 Restaurant").icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
-//                mMap!!.addMarker(MarkerOptions().position(LatLng(27.712169,85.3112139)).title("Yak Restaurant").icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
-//                mMap!!.addMarker(MarkerOptions().position(LatLng(27.7159773,85.3071411)).title("Yangling Restaurant").icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
-//                mMap!!.addMarker(MarkerOptions().position(LatLng(27.7143912,85.3101976)).title("Third Eye Restaurant").icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
-//                mMap!!.addMarker(MarkerOptions().position(LatLng(27.688586, 85.315282)).title("Kalinchowk Chinese Kitchen").icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
-//                mMap!!.addMarker(MarkerOptions().position(LatLng(27.688500, 85.314521)).title("Enjoy Momo & Naan Center").icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
-//                mMap!!.addMarker(MarkerOptions().position(LatLng(27.687426, 85.314102)).title("Mongolian Restaurant").icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
-//                mMap!!.addMarker(MarkerOptions().position(LatLng(27.686229, 85.313094)).title("Be There Lounge & Bar").icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
-//                mMap!!.addMarker(MarkerOptions().position(LatLng(27.691692, 85.316602)).title("KFC Restaurant").icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
-//                mMap!!.addMarker(MarkerOptions().position(LatLng(27.688281, 85.308598)).title("Shabri The Restaurant").icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
-//                mMap!!.addMarker(MarkerOptions().position(LatLng(27.685964, 85.306917)).title("Momotarou Restaurant").icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
                 for (item in Results){
                     mMap!!.addMarker(MarkerOptions().position(LatLng(item.location.lat,item.location.lng)).title(item.name).icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
                     mMap!!.setOnMarkerClickListener {
                         for(result in Results){
                             if (it.title==result.name){
                                 tempid = result.id
+                                temprating=result.rating.toString()
+                                openornot=result.open
                             }
                         }
                         val view = View.inflate(this@MapsActivity,R.layout.mapsdialogbox,null)
@@ -245,6 +235,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             Log.i("placeid","The Placeid is $tempid")
                             val intent = Intent(this@MapsActivity,PlaceInfo::class.java)
                             intent.putExtra("placeid",tempid)
+                            intent.putExtra("rating",temprating)
+                            intent.putExtra("openornot",openornot)
                             dialog.dismiss()
                             startActivity(intent)
                         }
