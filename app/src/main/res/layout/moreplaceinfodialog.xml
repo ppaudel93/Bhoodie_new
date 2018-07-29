@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:background="@drawable/rounddialog">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/parkingbikedialog"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/bikeicon"/>
+
+        <CheckBox
+            android:id="@+id/parkingbikecheckdialog"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="10dp"/>
+
+        <ImageView
+            android:id="@+id/parkingcardialog"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/caricon"/>
+        <CheckBox
+            android:id="@+id/parkingcarcheckdialog"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="10dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/smokingicondialog"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/smokingicon"/>
+
+        <CheckBox
+            android:id="@+id/smokingcheckdialog"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="10dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/vatstatusdialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/vat"
+            android:textAlignment="center"
+            android:textColor="@color/textprimary"
+            android:textSize="20sp"
+            android:layout_marginEnd="10dp"/>
+
+        <CheckBox
+            android:id="@+id/vatcheckdialog"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="10dp"/>
+
+        <TextView
+            android:id="@+id/scstatusdialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/servicecharge"
+            android:textAlignment="center"
+            android:textColor="@color/textprimary"
+            android:textSize="20sp"
+            android:layout_marginEnd="10dp"/>
+
+        <CheckBox
+            android:id="@+id/servicetaxcheckdialog"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="10dp"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/submitbuttondialog"
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:background="@drawable/roundedbutton"
+        android:text="@string/submit"
+        android:textSize="12sp"
+        android:textAllCaps="false"
+        android:textColor="@color/textprimary"
+        android:layout_marginTop="10dp"/>
+
+</LinearLayout>

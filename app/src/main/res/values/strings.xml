@@ -16,4 +16,12 @@
     <string name="fullname">Full Name</string>
     <string name="preferences">Preferences</string>
     <string name="opening">Opening Hours:</string>
+    <string name="open">Open</string>
+    <string name="closed">Closed</string>
+    <string name="test">TEST</string>
+    <string name="vat">Vat:</string>
+    <string name="servicecharge">SC:</string>
+    <string name="submit">Submit</string>
+    <string name="fooditem">Food Item</string>
+    <string name="price">Price</string>
 </resources>
