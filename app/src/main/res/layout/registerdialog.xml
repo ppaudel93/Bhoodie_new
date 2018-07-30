@@ -55,6 +55,7 @@
         android:text="@string/register"
         android:textAllCaps="false"
         android:textSize="20sp"
-        android:textColor="@color/textprimary"/>
+        android:textColor="@color/textprimary"
+        android:background="@drawable/roundedbutton"/>
 
 </LinearLayout>

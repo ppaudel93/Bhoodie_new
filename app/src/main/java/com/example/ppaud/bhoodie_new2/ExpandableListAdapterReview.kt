@@ -8,10 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import org.w3c.dom.Text
-import com.example.ppaud.bhoodie_new2.PlaceInfo.Menus
-import org.jetbrains.anko.textColorResource
+import com.example.ppaud.bhoodie_new2.PlaceInfo.Review
 
-class ExpandableListAdapterMenu(var context: Context,var expandableListView: ExpandableListView,var header: MutableList<String>,var tail: MutableList<MutableList<Menus>>): BaseExpandableListAdapter(){
+class ExpandableListAdapterReview(var context: Context,var expandableListView: ExpandableListView,var header: MutableList<String>,var tail: MutableList<MutableList<Review>>): BaseExpandableListAdapter(){
     override fun getGroup(groupPosition: Int): String {
         return header[groupPosition]
     }
@@ -50,7 +49,7 @@ class ExpandableListAdapterMenu(var context: Context,var expandableListView: Exp
         return tail[groupPosition].size
     }
 
-    override fun getChild(groupPosition: Int, childPosition: Int): Menus {
+    override fun getChild(groupPosition: Int, childPosition: Int): Review {
         return tail[groupPosition][childPosition]
     }
 
@@ -62,21 +61,13 @@ class ExpandableListAdapterMenu(var context: Context,var expandableListView: Exp
         var convertView = convertView
         if (convertView == null){
             val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            convertView = inflater.inflate(R.layout.childofmenu,null)
+            convertView = inflater.inflate(R.layout.childofreview,null)
 
         }
-        val title = convertView?.findViewById<TextView>(R.id.listitem)
-        val price = convertView?.findViewById<TextView>(R.id.listprice)
-        val score = convertView?.findViewById<TextView>(R.id.listscore)
-        val thumbsup = convertView?.findViewById<ImageView>(R.id.thumbsup)
-        val thumbsdown = convertView?.findViewById<ImageView>(R.id.thumbsdown)
-        title?.text= getChild(groupPosition,childPosition).item
-        price?.text=getChild(groupPosition,childPosition).price.toString()
-        score?.text=getChild(groupPosition,childPosition).votes.toString()
-        if (getChild(groupPosition,childPosition).votes<0)
-            score?.textColorResource=R.color.textred
-        if (getChild(groupPosition,childPosition).votes>0)
-            score?.textColorResource=R.color.textgreen
+        val title = convertView?.findViewById<TextView>(R.id.reviewtext)
+        val price = convertView?.findViewById<TextView>(R.id.reviewname)
+        title?.text= getChild(groupPosition,childPosition).text
+        price?.text=getChild(groupPosition,childPosition).name
         title?.setOnClickListener {
             Toast.makeText(context, getChild(groupPosition,childPosition).toString(),Toast.LENGTH_SHORT).show()
         }

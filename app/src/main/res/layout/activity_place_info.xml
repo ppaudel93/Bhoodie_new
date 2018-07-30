@@ -8,9 +8,10 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/colorAccent">
+        android:background="@color/colorAccent"
+        android:layout_gravity="top">
         <Button
             android:id="@+id/placeinfoback"
             android:layout_width="70dp"
@@ -26,6 +27,7 @@
             android:textAlignment="center"
             android:text="@string/test"
             android:textSize="20sp"
+            android:layout_marginStart="20dp"
             android:layout_gravity="center"/>
 
         <Button
@@ -33,45 +35,49 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_gravity="end"
-            android:background="@mipmap/favouritebutton"/>
+            android:background="@mipmap/favouritebutton"
+            android:layout_marginStart="25dp"/>
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="495dp"
-        android:layout_gravity="bottom">
+        android:layout_height="match_parent"
+        android:layout_gravity="top"
+        android:layout_marginTop="70dp"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="495dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:orientation="vertical">
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <ImageView
                     android:id="@+id/placeimage"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:layout_gravity="center"
-                    android:background="@color/colorPrimaryDark"
+                    android:layout_height="318dp"
+                    android:layout_gravity="top|center"
+                    android:background="@color/mainbackground"
                     android:src="@drawable/bhoodie" />
 
                 <ImageButton
                     android:id="@+id/previousimage"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@drawable/previousbutton"
-                    android:layout_marginTop="120dp"/>
+                    android:layout_marginTop="120dp"
+                    android:src="@drawable/previousbutton" />
 
                 <ImageButton
                     android:id="@+id/nextimage"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:src="@drawable/nextbutton"
+                    android:layout_gravity="end"
                     android:layout_marginTop="120dp"
-                    android:layout_gravity="end" />
+                    android:src="@drawable/nextbutton" />
 
             </FrameLayout>
 
@@ -84,14 +90,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/eatingicon"
-                    android:layout_marginEnd="10dp"/>
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/eatingicon" />
+
                 <TextView
                     android:id="@+id/placename"
                     android:layout_width="wrap_content"
@@ -112,14 +119,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/buildingimage"
-                    android:layout_marginEnd="10dp"/>
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/buildingimage" />
+
                 <TextView
                     android:id="@+id/placelocation"
                     android:layout_width="wrap_content"
@@ -140,14 +148,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/phoneimage"
-                    android:layout_marginEnd="10dp"/>
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/phoneimage" />
+
                 <TextView
                     android:id="@+id/placephoneno"
                     android:layout_width="wrap_content"
@@ -164,16 +173,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/strokecolor" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:src="@drawable/starasset"/>
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/starasset" />
+
                 <TextView
                     android:id="@+id/rating"
                     android:layout_width="70dp"
@@ -195,14 +206,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/opencloseicon"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:layout_marginEnd="10dp"/>
+                    android:layout_marginEnd="10dp" />
+
                 <TextView
                     android:id="@+id/istheplaceopen"
                     android:layout_width="wrap_content"
@@ -221,65 +233,38 @@
                 android:background="@color/strokecolor" />
 
             <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
-
-            <ImageView
-                android:id="@+id/parkingbike"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginEnd="10dp"
-                android:src="@drawable/bikeicon"/>
-
-            <ImageView
-                android:id="@+id/parkingbikecheck"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginEnd="10dp"
-                android:src="@drawable/plusmark"/>
-
-            <ImageView
-                android:id="@+id/parkingcar"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginEnd="10dp"
-                android:src="@drawable/caricon"/>
-
-            <ImageView
-                android:id="@+id/parkingcarcheck"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginEnd="10dp"
-                android:src="@drawable/plusmark"/>
-
-        </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/strokecolor" />
-
-            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/smokingicon"
+                    android:id="@+id/parkingbike"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginEnd="10dp"
-                    android:src="@drawable/smokingicon"/>
+                    android:src="@drawable/bikeicon" />
 
                 <ImageView
-                    android:id="@+id/smokingcheck"
+                    android:id="@+id/parkingbikecheck"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginEnd="10dp"
-                    android:src="@drawable/plusmark"/>
+                    android:src="@drawable/plusmark" />
+
+                <ImageView
+                    android:id="@+id/parkingcar"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/caricon" />
+
+                <ImageView
+                    android:id="@+id/parkingcarcheck"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/plusmark" />
 
             </LinearLayout>
 
@@ -291,44 +276,71 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/smokingicon"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/smokingicon" />
+
+                <ImageView
+                    android:id="@+id/smokingcheck"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/plusmark" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/strokecolor" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/vatstatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginEnd="10dp"
                     android:text="@string/vat"
                     android:textAlignment="center"
                     android:textColor="@color/textprimary"
-                    android:textSize="20sp"
-                    android:layout_marginEnd="10dp"/>
+                    android:textSize="20sp" />
 
                 <ImageView
                     android:id="@+id/vatcheck"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginEnd="10dp"
-                    android:src="@drawable/plusmark"/>
+                    android:src="@drawable/plusmark" />
 
                 <TextView
                     android:id="@+id/scstatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginEnd="10dp"
                     android:text="@string/servicecharge"
                     android:textAlignment="center"
                     android:textColor="@color/textprimary"
-                    android:textSize="20sp"
-                    android:layout_marginEnd="10dp"/>
+                    android:textSize="20sp" />
 
                 <ImageView
                     android:id="@+id/servicetaxcheck"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginEnd="10dp"
-                    android:src="@drawable/plusmark"/>
+                    android:src="@drawable/plusmark" />
 
             </LinearLayout>
 
@@ -350,13 +362,11 @@
                     android:id="@+id/addfooditem"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/plusmark"
                     android:layout_gravity="end|top"
-                    android:layout_marginTop="7dp"/>
+                    android:layout_marginTop="7dp"
+                    android:src="@drawable/plusmark" />
 
             </FrameLayout>
-
-
 
 
             <View
@@ -377,15 +387,49 @@
             <RatingBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:numStars="5"
-                android:stepSize="0.1"
-                android:layout_gravity="center"/>
+                android:stepSize="0.1" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/strokecolor" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/websiteicon"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/websiteicon" />
+
+                <TextView
+                    android:id="@+id/placewebsite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/test"
+                    android:textAlignment="center"
+                    android:textColor="@color/linkcolor"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/strokecolor" />
+
+            <ExpandableListView
+                android:id="@+id/expandablereview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
         </LinearLayout>
 
