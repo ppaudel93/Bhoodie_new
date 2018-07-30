@@ -1,6 +1,7 @@
 package com.example.ppaud.bhoodie_new2
 
 import android.annotation.SuppressLint
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
@@ -17,6 +18,7 @@ import android.location.Location
 import android.location.LocationManager
 import android.location.LocationListener
 import android.location.LocationProvider
+import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -27,11 +29,9 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AlertDialog
 import android.text.Editable
+import android.transition.Slide
 import android.util.Log
-import android.view.Gravity
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import com.beust.klaxon.*
 import com.example.ppaud.bhoodie_new2.R.id.*
@@ -238,7 +238,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             intent.putExtra("rating",temprating)
                             intent.putExtra("openornot",openornot)
                             dialog.dismiss()
-                            startActivity(intent)
+//                            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+//                                //swap with animations
+//                            }else{
+//                                //swap without animations
+//                            }
+                            startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(this@MapsActivity).toBundle())
                         }
                         return@setOnMarkerClickListener false
                     }
@@ -268,6 +273,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        with(window){
+            requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
+            enterTransition=Slide()
+            exitTransition=Slide()
+
+        }
         setContentView(R.layout.activity_maps)
         mDrawerLayout=findViewById(R.id.drawer_layout)
         val navigationView: NavigationView=findViewById(R.id.nav_view)
@@ -374,6 +385,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mMap!!.clear()
+        val style: MapStyleOptions = MapStyleOptions.loadRawResourceStyle(this@MapsActivity,R.raw.mapstyler)
+        mMap?.setMapStyle(style)
+        mMap?.uiSettings?.isMapToolbarEnabled=false
+        mMap?.uiSettings?.isZoomControlsEnabled=false
         if (mMap != null){
             val permission=ContextCompat.checkSelfPermission(this,android.Manifest.permission.ACCESS_FINE_LOCATION)
             if (permission == PackageManager.PERMISSION_GRANTED){
@@ -388,6 +403,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             senduserlocation(LatLng(userlocation!!.latitude,userlocation!!.longitude))
 
         }
+        mMap?.setMinZoomPreference(2.0f)
+        mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(27.825526, 85.289675),6.0f))
         startRepeatingTask()
     }
 }

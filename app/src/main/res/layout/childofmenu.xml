@@ -8,45 +8,55 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="4">
 
         <TextView
             android:id="@+id/listitem"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:textColor="@color/textprimary"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:layout_weight="1"/>
 
         <TextView
             android:id="@+id/listprice"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="end"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="20dp"
             android:textColor="@color/textprimary"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/listscore"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:textColor="@color/textprimary"
+            android:textSize="15sp"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:id="@+id/thumbsup"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="end"
+            android:clickable="true"
+            android:src="@drawable/thumbupicon"
+            android:layout_weight="0.5"/>
+
+        <ImageView
+            android:id="@+id/thumbsdown"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="end"
+            android:clickable="true"
+            android:src="@drawable/thumbdownicon"
+            android:layout_weight="0.5"/>
 
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/thumbsup"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_gravity="end"
-        android:layout_marginEnd="35dp"
-        android:layout_marginStart="0dp"
-        android:clickable="true"
-        android:src="@drawable/thumbupicon" />
-
-    <ImageView
-        android:id="@+id/thumbsdown"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_gravity="end"
-        android:clickable="true"
-        android:src="@drawable/thumbdownicon" />
 
 
 </FrameLayout>
