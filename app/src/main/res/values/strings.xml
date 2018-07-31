@@ -24,4 +24,6 @@
     <string name="submit">Submit</string>
     <string name="fooditem">Food Item</string>
     <string name="price">Price</string>
+    <string name="delivery">Delivery</string>
+    <string name="messagehint">Type your message</string>
 </resources>

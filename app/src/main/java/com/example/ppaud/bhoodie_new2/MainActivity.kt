@@ -10,6 +10,8 @@ import android.hardware.input.InputManager
 import android.inputmethodservice.Keyboard
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.provider.MediaStore
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.text.InputType
@@ -22,16 +24,33 @@ import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.LinearLayout
 import android.widget.Toast
+import com.androidnetworking.AndroidNetworking
+import com.androidnetworking.common.Priority
+import com.androidnetworking.error.ANError
+import com.androidnetworking.interfaces.JSONArrayRequestListener
+import com.github.kittinunf.fuel.Fuel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.registerdialog.*
 import kotlinx.android.synthetic.main.registerdialog.view.*
+import okhttp3.*
 import org.jetbrains.anko.*
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.IOException
+import java.nio.charset.Charset
+import java.text.Normalizer
 import kotlin.concurrent.thread
 
+
+val defaulturl: String = "https://bhoodie.herokuapp.com/test/"
 class MainActivity : AppCompatActivity() {
     private val RC_SIGN_IN = 123
     var mAuth = FirebaseAuth.getInstance()!!
@@ -40,14 +59,15 @@ class MainActivity : AppCompatActivity() {
         Snackbar.make(layout,resources.getString(id),Snackbar.LENGTH_LONG).show()
     }
 
-    class userinfo(email: String,name: String,key: String)
+    private val JSON = MediaType.parse("application/json; charset=utf-8")
+    private val plaintext = MediaType.parse("text/plain; charset=utf-8")
 
     override fun onStart() {
         super.onStart()
 //        val currentuser: FirebaseUser = mAuth.currentUser!!
 
     }
-
+    class userinfo(val email: String,val name: String)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         with(window){
@@ -57,6 +77,22 @@ class MainActivity : AppCompatActivity() {
 
         }
         setContentView(R.layout.activity_main)
+        doAsync {
+            val thenewuser = userinfo("asdads@gmail.com","Asd Asd")
+            AndroidNetworking.post(defaulturl).addBodyParameter(thenewuser)
+                    .setTag("test").setPriority(Priority.MEDIUM)
+                    .build()
+                    .getAsJSONArray(object: JSONArrayRequestListener{
+                        override fun onResponse(response: JSONArray?) {
+
+                        }
+
+                        override fun onError(anError: ANError?) {
+
+                        }
+
+                    })
+        }
         val view = View.inflate(this,R.layout.registerdialog,null)
 
         mAuth=FirebaseAuth.getInstance()

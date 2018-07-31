@@ -22,6 +22,7 @@ import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.os.SystemClock
 import android.provider.Settings
 import android.support.design.widget.NavigationView
 import android.support.v4.app.ActivityCompat
@@ -35,6 +36,7 @@ import android.view.*
 import android.widget.*
 import com.beust.klaxon.*
 import com.example.ppaud.bhoodie_new2.R.id.*
+import com.github.florent37.kotlin.pleaseanimate.please
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import org.jetbrains.anko.*
@@ -207,10 +209,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         override fun run(){
             if (mMap!!.cameraPosition.zoom>7.0)
             {
-
-                mMap!!.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney").snippet("Test Restaurant").icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
                 for (item in Results){
-                    mMap!!.addMarker(MarkerOptions().position(LatLng(item.location.lat,item.location.lng)).title(item.name).icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
+                    var placemarker = mMap!!.addMarker(MarkerOptions().position(LatLng(item.location.lat,item.location.lng)).title(item.name).icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
+//                    val handler = Handler().post{
+//                        val elapsed: Long
+//                        val v: Float
+//                        val t: Float
+//                        run {
+//                            elapsed = SystemClock.uptimeMillis() - start
+//                        }
+//                    }
+                    //placemarker.alpha=0.0f
                     mMap!!.setOnMarkerClickListener {
                         for(result in Results){
                             if (it.title==result.name){
@@ -230,6 +239,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         view.directionbutton.setOnClickListener {
                             getdirections(LatLng(userlocation!!.latitude,userlocation!!.longitude),destination)
                             dialog.dismiss()
+                        }
+                        view.chatbutton.setOnClickListener {
+                            startActivity<chatactivity>()
                         }
                         view.placeinfobutton.setOnClickListener {
                             Log.i("placeid","The Placeid is $tempid")
