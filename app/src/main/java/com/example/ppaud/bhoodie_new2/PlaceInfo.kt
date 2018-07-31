@@ -65,6 +65,7 @@ class PlaceInfo : AppCompatActivity() {
         getplaceinfo(placeid)
         val Openornot =findViewById<TextView>(R.id.istheplaceopen)
         val openicon = findViewById<ImageView>(R.id.opencloseicon)
+        if (isitopen!=null){
         if (isitopen==true){
             openicon.backgroundResource=R.drawable.openicon
             Openornot.text=getText(R.string.open)
@@ -72,6 +73,9 @@ class PlaceInfo : AppCompatActivity() {
         else{
             openicon.backgroundResource=R.drawable.closedicon
             Openornot.text=getText(R.string.closed)
+        }}else{
+            openicon.backgroundResource=R.drawable.closedicon
+            Openornot.text="Missing Data"
         }
         val previous = findViewById<ImageButton>(R.id.previousimage)
         val next = findViewById<ImageButton>(R.id.nextimage)
@@ -231,7 +235,7 @@ class PlaceInfo : AppCompatActivity() {
                 val carbutton = findViewById<ImageView>(R.id.parkingcarcheck)
                 val smokingbutton = findViewById<ImageView>(R.id.smokingcheck)
                 val vatbutton = findViewById<ImageView>(R.id.vatcheck)
-                val scbutton = findViewById<ImageView>(R.id.servicetaxcheck)
+                val deliverybutton = findViewById<ImageView>(R.id.deliverycheck)
                 val view = View.inflate(this@PlaceInfo,R.layout.moreplaceinfodialog,null)
                 val view2=View.inflate(this@PlaceInfo,R.layout.menuitemadddialog,null)
                 val builder = AlertDialog.Builder(this@PlaceInfo)
@@ -245,7 +249,7 @@ class PlaceInfo : AppCompatActivity() {
                 carbutton.isClickable=true
                 smokingbutton.isClickable=true
                 vatbutton.isClickable=true
-                scbutton.isClickable=true
+                deliverybutton.isClickable=true
                 addfoodbutton.isClickable=true
 
                 bikebutton.setOnClickListener{
@@ -264,7 +268,7 @@ class PlaceInfo : AppCompatActivity() {
                     dialog.show()
                     dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 }
-                scbutton.setOnClickListener {
+                deliverybutton.setOnClickListener {
                     dialog.show()
                     dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 }

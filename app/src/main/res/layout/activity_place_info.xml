@@ -324,19 +324,29 @@
                     android:layout_marginEnd="10dp"
                     android:src="@drawable/plusmark" />
 
-                <TextView
-                    android:id="@+id/scstatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/servicecharge"
-                    android:textAlignment="center"
-                    android:textColor="@color/textprimary"
-                    android:textSize="20sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/strokecolor" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/servicetaxcheck"
+                    android:id="@+id/deliveryicon"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/bookingicon" />
+
+                <ImageView
+                    android:id="@+id/deliverycheck"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginEnd="10dp"

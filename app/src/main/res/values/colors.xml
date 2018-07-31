@@ -12,4 +12,6 @@
     <color name="textred">#CD0E0E</color>
     <color name="textgreen">#39CD0E</color>
     <color name="mainbackground">#303030</color>
+    <color name="receivemessageblue">#091C57</color>
+    <color name="sendmessagegreen">#0A5709</color>
 </resources>
