@@ -26,4 +26,14 @@
     <string name="price">Price</string>
     <string name="delivery">Delivery</string>
     <string name="messagehint">Type your message</string>
+    <string-array name="vatoption">
+        <item>Any</item>
+        <item>No</item>
+    </string-array>
+    <string-array name="priceoption">
+        <item>Any</item>
+        <item>Low</item>
+        <item>Med</item>
+        <item>High</item>
+    </string-array>
 </resources>

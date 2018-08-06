@@ -22,6 +22,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import com.androidnetworking.AndroidNetworking
@@ -50,7 +51,7 @@ import java.text.Normalizer
 import kotlin.concurrent.thread
 
 
-val defaulturl: String = "https://bhoodie.herokuapp.com/test/"
+val defaulturl: String = "https://bhoodie.herokuapp.com/"
 class MainActivity : AppCompatActivity() {
     private val RC_SIGN_IN = 123
     var mAuth = FirebaseAuth.getInstance()!!
@@ -67,7 +68,7 @@ class MainActivity : AppCompatActivity() {
 //        val currentuser: FirebaseUser = mAuth.currentUser!!
 
     }
-    class userinfo(val email: String,val name: String)
+    class userinfo(val name: String,val email: String)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         with(window){
@@ -77,22 +78,6 @@ class MainActivity : AppCompatActivity() {
 
         }
         setContentView(R.layout.activity_main)
-        doAsync {
-            val thenewuser = userinfo("asdads@gmail.com","Asd Asd")
-            AndroidNetworking.post(defaulturl).addBodyParameter(thenewuser)
-                    .setTag("test").setPriority(Priority.MEDIUM)
-                    .build()
-                    .getAsJSONArray(object: JSONArrayRequestListener{
-                        override fun onResponse(response: JSONArray?) {
-
-                        }
-
-                        override fun onError(anError: ANError?) {
-
-                        }
-
-                    })
-        }
         val view = View.inflate(this,R.layout.registerdialog,null)
 
         mAuth=FirebaseAuth.getInstance()
@@ -112,7 +97,7 @@ class MainActivity : AppCompatActivity() {
             dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
             view.alertbuttonregister.setOnClickListener {
-                dialog.dismiss()
+                //dialog.dismiss()
                 val context: Context= this@MainActivity
                 val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(currentFocus.windowToken,InputMethodManager.HIDE_NOT_ALWAYS)
@@ -120,12 +105,27 @@ class MainActivity : AppCompatActivity() {
                 mAuth.createUserWithEmailAndPassword(view.registeremail.text.toString(),view.registerpass.text.toString())
                                                 .addOnCompleteListener {
                                                     if (it.isSuccessful){
+                                                        //view.dialogname
                                                         Log.i("task_successful","New User created")
                                                         //val mD = FirebaseDatabase.getInstance().getReference("users")
                                                         Toast.makeText(this@MainActivity,"New User Created",Toast.LENGTH_LONG).show()
                                                         user = mAuth.currentUser
-                                                        //val newuser: userinfo = userinfo(view.registeremail.text.toString(),view.dialogname.text.toString(),user!!.uid)
-                                                        //mD.child(user!!.uid).setValue(newuser)
+                                                        doAsync {
+                                                            val thenewuser = userinfo(view.dialogname.text.toString(),view.registeremail.text.toString())
+                                                            AndroidNetworking.post(defaulturl+"api/newuser/").addBodyParameter(thenewuser)
+                                                                    .setTag("test").setPriority(Priority.MEDIUM)
+                                                                    .build()
+                                                                    .getAsJSONArray(object: JSONArrayRequestListener{
+                                                                        override fun onResponse(response: JSONArray?) {
+
+                                                                        }
+
+                                                                        override fun onError(anError: ANError?) {
+
+                                                                        }
+
+                                                                    })
+                                                        }
                                                         dialog.dismiss()
                                                         login(view.registeremail.text.toString(),view.registerpass.text.toString())
                                                     }

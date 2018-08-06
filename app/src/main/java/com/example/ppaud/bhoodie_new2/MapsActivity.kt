@@ -97,6 +97,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun senduserlocation(userlocation: LatLng){
             val request = Request.Builder().url(defaulturl+"/api/places/lat=${userlocation.latitude}&long=${userlocation.longitude}").build()
+            Log.i("urlis",defaulturl+"/api/places/lat=${userlocation.latitude}&long=${userlocation.longitude}")
             val client = OkHttpClient()
             client.newCall(request).enqueue(object: Callback{
                 override fun onFailure(call: Call?, e: IOException?) {
@@ -260,21 +261,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         return@setOnMarkerClickListener false
                     }
                 }
-//                mMap!!.addMarker(MarkerOptions().position(opera).title("Opera House"))
-//                mMap!!.setOnMarkerClickListener {
-//                    val view = View.inflate(this@MapsActivity,R.layout.mapsdialogbox,null)
-//                    val builder = AlertDialog.Builder(this@MapsActivity)
-//                    builder.setView(view)
-//                    val dialog: AlertDialog = builder.create()
-//                    dialog.show()
-//                    dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-//                    val destination: LatLng = it.position
-//                    view.directionbutton.setOnClickListener {
-//                        getdirections(LatLng(userlocation!!.latitude,userlocation!!.longitude),destination)
-//                        dialog.dismiss()
-//                    }
-//                    return@setOnMarkerClickListener false
-//                }
             }
             else
             {mMap!!.clear()}
