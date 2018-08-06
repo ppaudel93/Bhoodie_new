@@ -80,6 +80,13 @@ class ExpandableListAdapterMenu(var context: Context,var expandableListView: Exp
         title?.setOnClickListener {
             Toast.makeText(context, getChild(groupPosition,childPosition).toString(),Toast.LENGTH_SHORT).show()
         }
+        thumbsdown?.setOnClickListener {
+            Toast.makeText(context, "Thumbs Down Clicked",Toast.LENGTH_SHORT).show()
+        }
+        thumbsup?.setOnClickListener {
+            Toast.makeText(context, "Thumbs Up Clicked",Toast.LENGTH_SHORT).show()
+
+        }
         return convertView
     }
 

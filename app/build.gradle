@@ -50,8 +50,6 @@ dependencies {
     implementation 'com.github.florent37:kotlinpleaseanimate:1.0.2'
     implementation 'com.github.kittinunf.fuel:fuel-android:1.14.0'
     implementation 'com.amitshekhar.android:android-networking:1.0.2'
-    //apply plugin: 'com.github.bumptech.glide:compiler:4.2.0'
-    //kapt 'com.github.bumptech.glide:compiler:4.2.0'
 }
 
 

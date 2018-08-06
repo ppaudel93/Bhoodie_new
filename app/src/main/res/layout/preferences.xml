@@ -1,24 +1,197 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="240dp"
-    android:layout_height="240dp"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="240dp"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@drawable/rounddialog">
+    android:background="@drawable/rounddialog"
+    android:orientation="vertical">
 
-    <ImageButton
-        android:id="@+id/preferencescancelbutton"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_gravity="right"
-        android:background="@drawable/cancel_dark"/>
-
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center|top"
-        android:text="@string/preferences"
-        android:textColor="@color/textprimary"
-        android:textSize="20sp"
-        android:fontFamily="sans-serif"/>
+        android:orientation="horizontal"
+        android:weightSum="10">
 
-</FrameLayout>
+        <TextView
+            android:layout_width="195dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif"
+            android:text="@string/preferences"
+            android:textAlignment="center"
+            android:textColor="@color/textprimary"
+            android:textSize="20sp"
+            android:layout_weight="9.6"/>
+
+        <ImageButton
+            android:id="@+id/preferencescancelbutton"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="end"
+            android:background="@drawable/cancel_dark"
+            android:layout_weight="0.4"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/strokecolor" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/parkingbikepreferences"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/bikeicon"/>
+
+        <CheckBox
+            android:id="@+id/parkingbikecheckpreferences"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="10dp"/>
+
+        <ImageView
+            android:id="@+id/parkingcarpreferences"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/caricon"/>
+
+        <CheckBox
+            android:id="@+id/parkingcarcheckpreferences"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="10dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/smokingiconpreferences"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/smokingicon"/>
+
+        <CheckBox
+            android:id="@+id/smokingcheckpreferences"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="10dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/vatstatuspreferences"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/vat"
+            android:textAlignment="center"
+            android:textColor="@color/textprimary"
+            android:textSize="20sp"
+            android:layout_marginEnd="10dp"/>
+
+        <Spinner
+            android:id="@+id/vatselect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            >
+
+        </Spinner>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/pricepreferences"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/moneyinfo"/>
+
+        <Spinner
+            android:id="@+id/priceselect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            >
+
+        </Spinner>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/deliveryiconpreferences"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/bookingicon"/>
+
+        <CheckBox
+            android:id="@+id/deliverycheckpreferences"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="10dp"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/strokecolor" />
+
+    <Button
+        android:id="@+id/preferencessubmitbutton"
+        android:layout_marginTop="10dp"
+        android:layout_width="70dp"
+        android:textAlignment="center"
+        android:text="@string/submit"
+        android:textColor="@color/textprimary"
+        android:textAllCaps="false"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:background="@drawable/roundedbutton"/>
+
+
+
+</LinearLayout>

@@ -10,16 +10,14 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".Recommendation">
+        tools:context=".Recommendation"
+        android:background="@color/mainbackground">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical"
-            android:background="@color/cardview_dark_background">
-
-        </android.support.v7.widget.RecyclerView>
+            android:id="@+id/recommendationrv"
+            android:scrollbars="vertical"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/preferencesbutton"
