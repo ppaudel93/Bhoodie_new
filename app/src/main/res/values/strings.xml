@@ -26,6 +26,7 @@
     <string name="price">Price</string>
     <string name="delivery">Delivery</string>
     <string name="messagehint">Type your message</string>
+    <string name="reviewtext">What do you think about the place? (Optional)</string>
     <string-array name="vatoption">
         <item>Any</item>
         <item>No</item>

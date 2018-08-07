@@ -2,9 +2,7 @@ package com.example.ppaud.bhoodie_new2
 
 import android.annotation.SuppressLint
 import android.app.ActivityOptions
-import android.content.Context
-import android.content.Intent
-import android.content.IntentSender
+import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -27,6 +25,7 @@ import android.provider.Settings
 import android.support.design.widget.NavigationView
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AlertDialog
 import android.text.Editable
@@ -211,16 +210,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             if (mMap!!.cameraPosition.zoom>7.0)
             {
                 for (item in Results){
-                    var placemarker = mMap!!.addMarker(MarkerOptions().position(LatLng(item.location.lat,item.location.lng)).title(item.name).icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
-//                    val handler = Handler().post{
-//                        val elapsed: Long
-//                        val v: Float
-//                        val t: Float
-//                        run {
-//                            elapsed = SystemClock.uptimeMillis() - start
-//                        }
-//                    }
-                    //placemarker.alpha=0.0f
+                    var placemarker = mMap!!.addMarker(MarkerOptions()
+                            .position(LatLng(item.location.lat,item.location.lng)).title(item.name)
+                            .icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
                     mMap!!.setOnMarkerClickListener {
                         for(result in Results){
                             if (it.title==result.name){

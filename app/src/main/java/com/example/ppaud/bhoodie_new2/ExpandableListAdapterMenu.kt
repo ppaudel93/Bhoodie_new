@@ -70,7 +70,7 @@ class ExpandableListAdapterMenu(var context: Context,var expandableListView: Exp
         val score = convertView?.findViewById<TextView>(R.id.listscore)
         val thumbsup = convertView?.findViewById<ImageView>(R.id.thumbsup)
         val thumbsdown = convertView?.findViewById<ImageView>(R.id.thumbsdown)
-        title?.text= getChild(groupPosition,childPosition).item
+        title?.text= getChild(groupPosition,childPosition).name
         price?.text=getChild(groupPosition,childPosition).price.toString()
         score?.text=getChild(groupPosition,childPosition).votes.toString()
         if (getChild(groupPosition,childPosition).votes<0)

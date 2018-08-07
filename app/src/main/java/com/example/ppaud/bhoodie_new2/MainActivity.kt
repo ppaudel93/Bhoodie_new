@@ -3,6 +3,7 @@ package com.example.ppaud.bhoodie_new2
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
@@ -13,7 +14,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
 import android.support.design.widget.Snackbar
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
+import android.telephony.SmsManager
 import android.text.InputType
 import android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
 import android.transition.Slide
@@ -52,6 +56,7 @@ import kotlin.concurrent.thread
 
 
 val defaulturl: String = "https://bhoodie.herokuapp.com/"
+private val SMS_REQUEST_CODE=101
 class MainActivity : AppCompatActivity() {
     private val RC_SIGN_IN = 123
     var mAuth = FirebaseAuth.getInstance()!!
@@ -78,6 +83,16 @@ class MainActivity : AppCompatActivity() {
 
         }
         setContentView(R.layout.activity_main)
+        val permission = ContextCompat.checkSelfPermission(this@MainActivity,android.Manifest.permission.SEND_SMS)
+//        if (permission == PackageManager.PERMISSION_GRANTED)
+//            //SmsManager.getDefault().sendTextMessage("+9779843378124",null,"I Am Using Bhoodie App.",null,null)
+//            //sendSMS("+9779843378124","I Am Using Bhoodie App.")
+//        else{
+//            requestPermission(android.Manifest.permission.SEND_SMS,SMS_REQUEST_CODE)
+//            if (permission == PackageManager.PERMISSION_GRANTED
+//                //SmsManager.getDefault().sendTextMessage("+9779843378124",null,"I Am Using Bhoodie App.",null,null)
+//                //sendSMS("+9779843378124","I Am Using Bhoodie App.")
+//        }
         val view = View.inflate(this,R.layout.registerdialog,null)
 
         mAuth=FirebaseAuth.getInstance()
@@ -139,6 +154,10 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+    }
+
+    private fun requestPermission(permissionType: String,requestCode: Int){
+        ActivityCompat.requestPermissions(this, arrayOf(permissionType),requestCode)
     }
 
 

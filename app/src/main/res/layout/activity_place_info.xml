@@ -395,11 +395,12 @@
                 android:background="@color/strokecolor" />
 
             <RatingBar
+                android:id="@+id/placeratingbar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:numStars="5"
-                android:stepSize="0.1" />
+                android:stepSize="1" />
 
             <View
                 android:layout_width="match_parent"
