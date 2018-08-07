@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:padding="10dp"
+    android:background="@drawable/rounddialog">
+
+    <EditText
+        android:id="@+id/revieweditdialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/roundedrectangle"
+        android:padding="10dp"
+        android:hint="@string/reviewtext"
+        android:textColor="@color/textprimary"
+        android:textAlignment="center"/>
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:background="@drawable/roundedbutton"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:textAlignment="center"
+        android:text="@string/submit"
+        android:textColor="@color/textprimary"
+        android:textSize="25sp"
+        android:layout_gravity="center"/>
+
+</LinearLayout>

@@ -1,6 +1,10 @@
 package com.example.ppaud.bhoodie_new2
 
 import android.app.ProgressDialog
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -11,6 +15,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AlertDialog
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
@@ -19,13 +24,19 @@ import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.*
+import com.androidnetworking.AndroidNetworking
+import com.androidnetworking.common.Priority
+import com.androidnetworking.error.ANError
+import com.androidnetworking.interfaces.JSONArrayRequestListener
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_place_info.*
+import kotlinx.android.synthetic.main.menuitemadddialog.view.*
 import okhttp3.*
 import org.jetbrains.anko.*
+import org.json.JSONArray
 import org.w3c.dom.Text
 import java.io.IOException
 
@@ -58,7 +69,11 @@ class PlaceInfo : AppCompatActivity() {
         dialog2 = indeterminateProgressDialog(message = "Please Wait...",title="Fetching Data")
         Log.i("useremailaddress",mAuth.currentUser?.email)
         var placeid = intent.getStringExtra("placeid")
+        Log.i("requeststatus",placeid)
         var rating = intent.getStringExtra("rating")
+        Log.i("requeststatus",rating)
+        if (rating.isNullOrBlank())
+            rating="4"
         val isitopen = intent.getBooleanExtra("openornot",false)
         val ratingtext = findViewById<TextView>(R.id.rating)
         ratingtext.text=rating
@@ -104,11 +119,12 @@ class PlaceInfo : AppCompatActivity() {
 
                 override fun onResponse(call: Call?, response: Response?) {
 
-                    Log.i("requeststatus","Request Success")
+                    Log.i("requeststatus","Request Success 123123123")
                     val body = response?.body()?.string()
                     val gson = GsonBuilder().create()
                     val Mainobject = gson.fromJson(body,mainobject::class.java)
-                    placeinfoname.text=Mainobject.name
+                    Log.i("requeststatus",Mainobject.name)
+
                     val fooditems: MutableList<Menus> = ArrayList()
                     val reviewitems: MutableList<Review> = ArrayList()
                     for (item in Mainobject.photos){
@@ -132,6 +148,7 @@ class PlaceInfo : AppCompatActivity() {
 
 
             uiThread {
+                placeinfoname.text=Mainobject.name
                 val nameofplace = findViewById<TextView>(R.id.placename)
                 val locationofplace = findViewById<TextView>(R.id.placelocation)
                 val phoneofplace = findViewById<TextView>(R.id.placephoneno)
@@ -209,7 +226,7 @@ class PlaceInfo : AppCompatActivity() {
                 if (photourl.isNotEmpty()){
                     //imageview.layoutParams.height= wrapContent
                     Glide.with(this@PlaceInfo).load(photourl[imageurlcount]).into(imageview)
-                    Glide.with(this@PlaceInfo).load(photourl[imageurlcount]).into(imageview)
+                    //Glide.with(this@PlaceInfo).load(photourl[imageurlcount]).into(imageview)
                     //imageview.layoutParams.height= wrapContent
                     val nextbutton = findViewById<ImageButton>(R.id.nextimage)
                     val previousbutton = findViewById<ImageButton>(R.id.previousimage)
@@ -238,19 +255,29 @@ class PlaceInfo : AppCompatActivity() {
                 val deliverybutton = findViewById<ImageView>(R.id.deliverycheck)
                 val view = View.inflate(this@PlaceInfo,R.layout.moreplaceinfodialog,null)
                 val view2=View.inflate(this@PlaceInfo,R.layout.menuitemadddialog,null)
+                val view3 = View.inflate(this@PlaceInfo,R.layout.reviewdialog,null)
                 val builder = AlertDialog.Builder(this@PlaceInfo)
                 val builder2 = AlertDialog.Builder(this@PlaceInfo)
+                val builder3 = AlertDialog.Builder(this@PlaceInfo)
                 val addfoodbutton = findViewById<ImageView>(R.id.addfooditem)
                 builder.setView(view)
                 builder2.setView(view2)
+                builder3.setView(view3)
                 val dialog: AlertDialog = builder.create()
                 val dialog2: AlertDialog = builder2.create()
+                val dialog3: AlertDialog = builder3.create()
                 bikebutton.isClickable=true
                 carbutton.isClickable=true
                 smokingbutton.isClickable=true
                 vatbutton.isClickable=true
                 deliverybutton.isClickable=true
                 addfoodbutton.isClickable=true
+                placeratingbar.setOnRatingBarChangeListener { ratingBar, rating, fromUser ->
+                    dialog3.show()
+                    dialog3.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                }
+
+
 
                 bikebutton.setOnClickListener{
                     dialog.show()
@@ -275,6 +302,42 @@ class PlaceInfo : AppCompatActivity() {
                 addfoodbutton.setOnClickListener {
                     dialog2.show()
                     dialog2.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                    view2.sendfooditem.setOnClickListener {
+                        when {
+                            view2.foodname.text.toString().isNullOrEmpty() -> Toast.makeText(this@PlaceInfo,"Food Name is Empty.",Toast.LENGTH_LONG).show()
+                            view2.foodprice.text.toString().isNullOrEmpty() -> Toast.makeText(this@PlaceInfo,"Food Price is Empty.",Toast.LENGTH_LONG).show()
+                            else -> {
+                                var placeid = intent.getStringExtra("placeid")
+                                val newfood: Menus = Menus(view2.foodname.text.toString(),view2.foodprice.text.toString().toInt(),0,placeid)
+                                doAsync {
+                                    AndroidNetworking.post(defaulturl+"/api/newfood/")
+                                            .addBodyParameter(newfood).setPriority(Priority.MEDIUM)
+                                            .setTag("newfood").build()
+                                            .getAsJSONArray(object: JSONArrayRequestListener{
+                                                override fun onResponse(response: JSONArray?) {
+
+
+                                                }
+
+                                                override fun onError(anError: ANError?) {
+
+
+                                                }
+
+                                            })
+
+                                    uiThread {
+                                        view2.foodname.setText("")
+                                        view2.foodprice.setText("")
+                                        dialog2.dismiss()
+                                    }
+
+
+                                }
+
+                            }
+                        }
+                    }
                     //dialog2.window.setLayout(700, wrapContent)
                 }
 
@@ -292,7 +355,7 @@ class PlaceInfo : AppCompatActivity() {
 
     class mainobject(val name: String,val address: String,val formatted_phone_number: String,val opening_hours: List<String>,val photos: List<String>,val review: List<Review>,val website: String, val menu: List<Menus>)
 
-    class Menus(val item: String,val price: Int,val votes: Int)
+    class Menus(val name: String,val price: Int,val votes: Int,val placeid: String)
 
     class Review(val name: String,val text: String)
 }
