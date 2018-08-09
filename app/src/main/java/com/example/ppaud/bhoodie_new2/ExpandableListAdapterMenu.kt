@@ -3,15 +3,23 @@ package com.example.ppaud.bhoodie_new2
 import android.content.Context
 import android.media.Image
 import android.text.Layout
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.androidnetworking.AndroidNetworking
+import com.androidnetworking.common.Priority
+import com.androidnetworking.error.ANError
+import com.androidnetworking.interfaces.JSONArrayRequestListener
 import org.w3c.dom.Text
 import com.example.ppaud.bhoodie_new2.PlaceInfo.Menus
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.textColorResource
+import org.jetbrains.anko.uiThread
+import org.json.JSONArray
 
-class ExpandableListAdapterMenu(var context: Context,var expandableListView: ExpandableListView,var header: MutableList<String>,var tail: MutableList<MutableList<Menus>>): BaseExpandableListAdapter(){
+class ExpandableListAdapterMenu(var context: Context,var expandableListView: ExpandableListView,var header: MutableList<String>,var tail: MutableList<MutableList<Menus>>,var placeid: String): BaseExpandableListAdapter(){
     override fun getGroup(groupPosition: Int): String {
         return header[groupPosition]
     }
@@ -82,9 +90,44 @@ class ExpandableListAdapterMenu(var context: Context,var expandableListView: Exp
         }
         thumbsdown?.setOnClickListener {
             Toast.makeText(context, "Thumbs Down Clicked",Toast.LENGTH_SHORT).show()
+            Log.i("selecteditem",placeid)
+            doAsync {
+                val votesend = votingclass(placeid,getChild(groupPosition,childPosition).name,"DOWN")
+                AndroidNetworking.post("https://bhoodie.herokuapp.com/api/voting/")
+                        .addBodyParameter(votesend).setPriority(Priority.MEDIUM)
+                        .setTag("foodvote").build()
+                        .getAsJSONArray(object: JSONArrayRequestListener{
+                            override fun onResponse(response: JSONArray?) {
+
+                            }
+
+                            override fun onError(anError: ANError?) {
+
+                            }
+
+                        })
+
+            }
         }
         thumbsup?.setOnClickListener {
             Toast.makeText(context, "Thumbs Up Clicked",Toast.LENGTH_SHORT).show()
+            Log.i("selecteditem",placeid)
+            doAsync {
+                val votesend = votingclass(placeid,getChild(groupPosition,childPosition).name,"UP")
+                AndroidNetworking.post("https://bhoodie.herokuapp.com/api/voting/")
+                        .addBodyParameter(votesend).setPriority(Priority.MEDIUM)
+                        .setTag("foodvote").build()
+                        .getAsJSONArray(object: JSONArrayRequestListener{
+                            override fun onResponse(response: JSONArray?) {
+
+                            }
+
+                            override fun onError(anError: ANError?) {
+
+                            }
+
+                        })
+            }
 
         }
         return convertView
@@ -97,5 +140,7 @@ class ExpandableListAdapterMenu(var context: Context,var expandableListView: Exp
     override fun getGroupCount(): Int {
         return header.size
     }
+
+    class votingclass(val placeid: String,val name: String,val vote: String)
 
 }

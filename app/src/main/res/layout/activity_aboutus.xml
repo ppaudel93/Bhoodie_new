@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".aboutus">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/colorAccent"
+        android:layout_gravity="top">
+        <Button
+            android:id="@+id/aboutusback"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="start"
+            android:background="@mipmap/backbutton" />
+
+        <TextView
+            android:id="@+id/aboutusname"
+            android:layout_width="220dp"
+            android:layout_height="50dp"
+            android:textColor="@color/textprimary"
+            android:textAlignment="center"
+            android:text="@string/abtus"
+            android:textSize="20sp"
+            android:layout_marginStart="20dp"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="top"
+        android:layout_marginTop="70dp"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:layout_gravity="center"
+                android:background="@drawable/cow_food" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/strokecolor" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/bhoodiedesc"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="@color/textprimary"
+                android:textSize="20sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/strokecolor" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/team"
+                android:textColor="@color/textprimary"
+                android:textSize="25sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/strokecolor" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bhoodie_team" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/strokecolor" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/teammembers"
+                android:textAlignment="center"
+                android:textColor="@color/textprimary"
+                android:textSize="20sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/strokecolor" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/contact"
+                android:textAlignment="center"
+                android:textColor="@color/textprimary"
+                android:textSize="20sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/strokecolor" />
+
+            <TextView
+                android:id="@+id/prayogemail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/emailprayog"
+                android:textAlignment="center"
+                android:textColor="@color/linkcolor"
+                android:textSize="20sp"
+                android:clickable="true"
+                android:focusable="true"/>
+
+            <TextView
+                android:id="@+id/shreyamemail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/emailshreyam"
+                android:textAlignment="center"
+                android:textColor="@color/linkcolor"
+                android:textSize="20sp"
+                android:clickable="true"
+                android:focusable="true"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/strokecolor" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/abouttheproject"
+                android:textAlignment="center"
+                android:textColor="@color/textprimary"
+                android:textSize="20sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/strokecolor" />
+
+            <TextView
+                android:id="@+id/githubandroid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/githubandroid"
+                android:textAlignment="center"
+                android:textColor="@color/linkcolor"
+                android:textSize="20sp"
+                android:clickable="true"
+                android:focusable="true"/>
+
+
+            <TextView
+                android:id="@+id/githubserver"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/githubserver"
+                android:textAlignment="center"
+                android:textColor="@color/linkcolor"
+                android:textSize="20sp"
+                android:clickable="true"
+                android:focusable="true"/>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</FrameLayout>

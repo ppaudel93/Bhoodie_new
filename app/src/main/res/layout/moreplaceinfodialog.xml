@@ -81,11 +81,41 @@
             android:textSize="20sp"
             android:layout_marginEnd="10dp"/>
 
-        <CheckBox
-            android:id="@+id/vatcheckdialog"
+        <Spinner
+            android:id="@+id/vatselectplaceinfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            >
+
+        </Spinner>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/priceplaceinfo"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_marginEnd="10dp"/>
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/moneyinfo"/>
+
+        <Spinner
+            android:id="@+id/priceselectplaceinfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            >
+
+        </Spinner>
+
 
     </LinearLayout>
 

@@ -34,6 +34,8 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_place_info.*
 import kotlinx.android.synthetic.main.menuitemadddialog.view.*
+import kotlinx.android.synthetic.main.moreplaceinfodialog.view.*
+import kotlinx.android.synthetic.main.preferences.view.*
 import okhttp3.*
 import org.jetbrains.anko.*
 import org.json.JSONArray
@@ -199,7 +201,7 @@ class PlaceInfo : AppCompatActivity() {
                 tail3.add(temp3)
                 val imageview = findViewById<ImageView>(R.id.placeimage)
                 expandablelist.setAdapter(ExpandableListAdapter(this@PlaceInfo,expandablelist,header,tail))
-                menuexpandable.setAdapter(ExpandableListAdapterMenu(this@PlaceInfo,menuexpandable,header2,tail2))
+                menuexpandable.setAdapter(ExpandableListAdapterMenu(this@PlaceInfo,menuexpandable,header2,tail2,placeid))
                 expandablereview.setAdapter(ExpandableListAdapterReview(this@PlaceInfo,expandablereview,header3,tail3))
                 expandablereview.isNestedScrollingEnabled=true
                 menuexpandable.isNestedScrollingEnabled=true
@@ -277,7 +279,13 @@ class PlaceInfo : AppCompatActivity() {
                     dialog3.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 }
 
+                val adapter: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(this@PlaceInfo,R.array.vatoption, android.R.layout.simple_spinner_dropdown_item)
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                view.vatselectplaceinfo.adapter=adapter
 
+                val adapter2: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(this@PlaceInfo,R.array.priceoption, android.R.layout.simple_spinner_dropdown_item)
+                adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                view.priceselectplaceinfo.adapter=adapter2
 
                 bikebutton.setOnClickListener{
                     dialog.show()
@@ -298,6 +306,42 @@ class PlaceInfo : AppCompatActivity() {
                 deliverybutton.setOnClickListener {
                     dialog.show()
                     dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                }
+                view.submitbuttondialog.setOnClickListener {
+                    doAsync {
+                        val bikeparkinfo: String;val carparkinfo: String;val smokinginfo: String
+                        val vatinfo: String = view.vatselectplaceinfo.selectedItem.toString().toUpperCase()
+                        val pricerange: String = view.priceselectplaceinfo.selectedItem.toString().toUpperCase()
+                        val deliveryinfo: String
+                        if (view.parkingbikecheckdialog.isChecked)
+                            bikeparkinfo="YES"
+                        else bikeparkinfo="NO"
+                        if (view.parkingcarcheckdialog.isChecked)
+                            carparkinfo="YES"
+                        else carparkinfo="NO"
+                        if (view.smokingcheckdialog.isChecked)
+                            smokinginfo="YES"
+                        else smokinginfo="NO"
+                        if (view.deliverycheckdialog.isChecked)
+                            deliveryinfo="YES"
+                        else deliveryinfo="NO"
+                        val restinfo = RestaurantInfos(placeid,bikeparkinfo
+                                ,carparkinfo,smokinginfo,vatinfo,pricerange,deliveryinfo)
+                        Log.i("selecteditem","posting posting posting "+ restinfo.placeid)
+                        AndroidNetworking.post(defaulturl+"/api/editres/")
+                                .addBodyParameter(restinfo).setPriority(Priority.MEDIUM)
+                                .setTag("restaurantinfo").build()
+                                .getAsJSONArray(object : JSONArrayRequestListener{
+                                    override fun onResponse(response: JSONArray?) {
+
+                                    }
+
+                                    override fun onError(anError: ANError?) {
+
+                                    }
+
+                                })
+                    }
                 }
                 addfoodbutton.setOnClickListener {
                     dialog2.show()
@@ -358,4 +402,6 @@ class PlaceInfo : AppCompatActivity() {
     class Menus(val name: String,val price: Int,val votes: Int,val placeid: String)
 
     class Review(val name: String,val text: String)
+
+    class RestaurantInfos(val placeid: String,val bike_parking: String,val car_parking: String,val smoking: String,val vat: String,val prange: String,val delivery: String)
 }

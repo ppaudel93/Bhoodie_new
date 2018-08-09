@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".userprofile"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/colorAccent"
+        android:layout_gravity="top">
+        <Button
+            android:id="@+id/profileback"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="start"
+            android:background="@mipmap/backbutton" />
+
+        <TextView
+            android:id="@+id/profilename"
+            android:layout_width="220dp"
+            android:layout_height="50dp"
+            android:textColor="@color/textprimary"
+            android:textAlignment="center"
+            android:text="@string/yourprofile"
+            android:textSize="20sp"
+            android:layout_marginStart="20dp"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_marginTop="70dp"
+        android:layout_height="240dp"
+        android:src="@drawable/if_user_309035"
+        android:layout_gravity="center|top"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:layout_marginTop="90dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/strokecolor" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:weightSum="10">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/emailcolon"
+                android:textAlignment="center"
+                android:textColor="@color/textprimary"
+                android:textSize="25sp"
+                android:layout_weight="2"
+                android:layout_marginStart="30dp"/>
+
+            <TextView
+                android:id="@+id/profileemail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/test"
+                android:textAlignment="center"
+                android:textColor="@color/textprimary"
+                android:textSize="25sp"
+                android:layout_weight="8"
+                android:layout_marginEnd="30dp"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/strokecolor" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:weightSum="10">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/fullnamecolon"
+                android:textAlignment="center"
+                android:textColor="@color/textprimary"
+                android:textSize="25sp"
+                android:layout_weight="2"
+                android:layout_marginStart="30dp"/>
+
+            <TextView
+                android:id="@+id/profilefullname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/test"
+                android:textAlignment="center"
+                android:textColor="@color/textprimary"
+                android:textSize="25sp"
+                android:layout_weight="8"
+                android:layout_marginEnd="30dp"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/strokecolor" />
+        <Button
+            android:id="@+id/userlogout"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:text="@string/logout"
+            android:layout_gravity="center"
+            android:textAllCaps="false"
+            android:textAlignment="center"
+            android:textColor="@color/textprimary"
+            android:background="@drawable/roundedbutton"
+            android:layout_marginTop="20dp"/>
+
+    </LinearLayout>
+
+
+
+
+
+</FrameLayout>

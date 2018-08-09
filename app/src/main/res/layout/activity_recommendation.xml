@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/drawer_layout_recommend"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -13,11 +6,37 @@
         tools:context=".Recommendation"
         android:background="@color/mainbackground">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/colorAccent"
+            android:layout_gravity="top">
+            <Button
+                android:id="@+id/recommendationback"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="start"
+                android:background="@mipmap/backbutton" />
+
+            <TextView
+                android:id="@+id/profilename"
+                android:layout_width="220dp"
+                android:layout_height="50dp"
+                android:textColor="@color/textprimary"
+                android:textAlignment="center"
+                android:text="@string/recommendations"
+                android:textSize="20sp"
+                android:layout_marginStart="20dp"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/recommendationrv"
-            android:scrollbars="vertical"/>
+            android:scrollbars="vertical"
+            android:layout_marginTop="70dp"/>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/preferencesbutton"
@@ -27,12 +46,3 @@
             android:src="@drawable/if_params_115702"
             android:backgroundTint="@color/colorAccent"/>
     </FrameLayout>
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:menu="@menu/drawer_view" />
-
-</android.support.v4.widget.DrawerLayout>

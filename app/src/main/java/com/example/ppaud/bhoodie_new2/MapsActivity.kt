@@ -2,6 +2,9 @@ package com.example.ppaud.bhoodie_new2
 
 import android.annotation.SuppressLint
 import android.app.ActivityOptions
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -46,6 +49,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_maps.*
@@ -73,6 +77,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private val LOCATION_REQUEST_CODE=101
     private lateinit var b: Bitmap
     lateinit var locationManager: LocationManager
+    var mAuth = FirebaseAuth.getInstance()!!
     private var hasGps=false
     private var hasNetwork=false
     private var locationGps: Location? = null
@@ -86,6 +91,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var tempid: String
     private lateinit var temprating: String
     private var openornot: Boolean = false
+    private var notificationManager: NotificationManager? = null
 
     fun startRepeatingTask(){
         mStatusChecker.run()
@@ -261,6 +267,40 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    private fun createNofificationChannel(id: String,name: String,description: String){
+        val importance = NotificationManager.IMPORTANCE_LOW
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(id, name, importance)
+            channel.description = description
+            channel.enableLights(true)
+            channel.lightColor = Color.RED
+            channel.enableVibration(true)
+            channel.vibrationPattern =
+                    longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
+            notificationManager?.createNotificationChannel(channel)
+        }
+
+    }
+    fun sendNotification(view: View){
+        val notificationID = 101
+        val channelID = "com.ppaud.bhoodie"
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            val notification = Notification.Builder(this@MapsActivity, channelID).setContentTitle("User Unverified")
+                    .setContentText("Please Verify Your Account.").setSmallIcon(R.drawable.bhoodie).setChannelId(channelID).setAutoCancel(true).build()
+            notificationManager?.notify(notificationID, notification)
+            if(!mAuth.currentUser?.isEmailVerified!!) {
+                notificationManager?.notify(notificationID, notification)
+            }else{
+                //notificationManager?.cancel(notificationID)
+            notificationManager?.cancelAll()}
+        }
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        notificationManager?.cancel(101)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         with(window){
@@ -272,12 +312,39 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         setContentView(R.layout.activity_maps)
         mDrawerLayout=findViewById(R.id.drawer_layout)
         val navigationView: NavigationView=findViewById(R.id.nav_view)
+        if (!mAuth.currentUser?.isEmailVerified!!){
+            val permission = ContextCompat.checkSelfPermission(this@MapsActivity,android.Manifest.permission.ACCESS_NOTIFICATION_POLICY)
+            if (permission == PackageManager.PERMISSION_GRANTED){
+                notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                createNofificationChannel("com.ppaud.bhoodie","UserVerification","Check User Verification")
+                sendNotification(findViewById(android.R.id.content))
+            } else{
+                requestPermission(android.Manifest.permission.ACCESS_NOTIFICATION_POLICY,LOCATION_REQUEST_CODE)
+                if (permission == PackageManager.PERMISSION_GRANTED){
+                    notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                    createNofificationChannel("com.ppaud.bhoodie","UserVerification","Check User Verification")
+                    sendNotification(findViewById(android.R.id.content))
+
+                }
+
+            }
+        }
         navigationView.setNavigationItemSelectedListener {
             it.isChecked = true
-            if (it.itemId == recommend_id)
+            if (it.itemId == recommend_id){
                 startActivity<Recommendation>()
+                finish()
+            }
             if (it.itemId== show_map)
                 mDrawerLayout.closeDrawers()
+            if (it.itemId == user_profile){
+                startActivity<userprofile>()
+                finish()
+            }
+            if (it.itemId == about_id){
+                startActivity<aboutus>()
+            }
+            if (it.itemId == favs_id){}
 
             mDrawerLayout.closeDrawers()
             true
@@ -397,6 +464,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(27.825526, 85.289675),6.0f))
         startRepeatingTask()
     }
+
+
 }
 
     private fun decodePoly(encoded: String): List<LatLng> {

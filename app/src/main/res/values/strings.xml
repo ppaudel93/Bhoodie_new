@@ -27,6 +27,22 @@
     <string name="delivery">Delivery</string>
     <string name="messagehint">Type your message</string>
     <string name="reviewtext">What do you think about the place? (Optional)</string>
+    <string name="emailcolon">Email:</string>
+    <string name="fullnamecolon">Full Name:</string>
+    <string name="yourprofile">Your Profile</string>
+    <string name="changename">Change Name</string>
+    <string name="logout">Logout</string>
+    <string name="recommendations">Recommendations</string>
+    <string name="bhoodiedesc"><p>Bhoodie is a restaurant recommendation and food delivery tool following a by the user, for the user approach of providing food suggestions to the user. Bhoodie is packed with features like recommendation and chatbot with countless small features sprinkled throughout the app. Try Bhoodie and find all of its features.</p></string>
+    <string name="teammembers">Samrat Subedi\nPrayog Paudel\nPrashant Acharya\nShreyam Adhikari</string>
+    <string name="team">The Team:</string>
+    <string name="contact">Contact Us At:</string>
+    <string name="emailprayog"><u>ppaudel93@gmail.com</u></string>
+    <string name="emailshreyam"><u>shreyam1008@gmail.com</u></string>
+    <string name="abouttheproject">Project Link:</string>
+    <string name="githubandroid">https://github.com/ppaudel93/Bhoodie_new</string>
+    <string name="githubserver">https://github.com/shreyam1008/foody</string>
+
     <string-array name="vatoption">
         <item>Any</item>
         <item>No</item>
