@@ -19,6 +19,8 @@ import android.view.ViewGroup
 import android.widget.*
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
+import com.androidnetworking.error.ANError
+import com.androidnetworking.interfaces.JSONArrayRequestListener
 import com.example.ppaud.bhoodie_new2.R.id.recommend_id
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.GsonBuilder
@@ -31,6 +33,7 @@ import okhttp3.*
 import org.jetbrains.anko.*
 import org.jetbrains.anko.coroutines.experimental.bg
 import org.jetbrains.anko.sdk25.coroutines.onItemSelectedListener
+import org.json.JSONArray
 import java.io.IOException
 import kotlin.concurrent.fixedRateTimer
 
@@ -48,19 +51,19 @@ class Recommendation : AppCompatActivity() {
     private var body: String? = ""
     private lateinit var dialog2: ProgressDialog
 
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        startActivity<MapsActivity>()
+        finish()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recommendation)
         dialog2 = indeterminateProgressDialog(message = "Please Wait...",title = "Recommending")
-        mDrawerLayout=findViewById(R.id.drawer_layout_recommend)
-        val navigationView: NavigationView =findViewById(R.id.nav_view)
-        navigationView.setNavigationItemSelectedListener {
-            it.isChecked = true
-            if (it.itemId == R.id.show_map)
-                startActivity<MapsActivity>()
-            if (it.itemId==recommend_id)
-                mDrawerLayout.closeDrawers()
-            true
+        recommendationback.setOnClickListener {
+            startActivity<MapsActivity>()
+            finish()
         }
         doAsync {
             val request = Request.Builder()
@@ -103,73 +106,11 @@ class Recommendation : AppCompatActivity() {
                                 Log.i("requeststatus",Mainobject.name+Mainobject.address+Mainobject.photos[0])
                                 listofmainobject.add(Mainobject)
 
-//                                Handler().postDelayed({
-//                                    val rv = findViewById<RecyclerView>(R.id.recommendationrv)
-//                                    val llm = LinearLayoutManager(this@Recommendation)
-//                                    rv.layoutManager=llm
-//                                    Log.i("requeststatus",listofmainobject.size.toString())
-//                                    rv.adapter = recommendationrecycleradapter(listofmainobject,this@Recommendation,arraystring)
-//                                },5000)
-
                             }
 
                         })
                     }
 
-
-//                    val rv = findViewById<RecyclerView>(R.id.recommendationrv)
-//                        val llm = LinearLayoutManager(this@Recommendation)
-//                        rv.layoutManager=llm
-//                        Log.i("requeststatus",listofmainobject.size.toString())
-//                        rv.adapter = recommendationrecycleradapter(listofmainobject,this@Recommendation,arraystring)
-
-//                    Handler().postDelayed({
-//                        val rv = findViewById<RecyclerView>(R.id.recommendationrv)
-//                        val llm = LinearLayoutManager(this@Recommendation)
-//                        rv.layoutManager=llm
-//                        Log.i("requeststatus",listofmainobject.size.toString())
-//                        rv.adapter = recommendationrecycleradapter(listofmainobject,this@Recommendation,arraystring)
-//                    },10000)
-//                    Handler().postDelayed({
-////                       for(item in Listofplaceid.results){
-////                           arraystring.add(item)
-////                       }
-////                       Log.i("requeststatus",arraystring[0]+"  "+arraystring[1])
-//                       val testerboolean = doAsyncResult {
-////                           for (item in arraystring){
-////                               val request2 = Request.Builder().url(defaulturl+"/api/pdetail/id=$item").build()
-////                               Log.i("requeststatus",defaulturl+"/api/pdetail/id=$item")
-////                               val client2 = OkHttpClient()
-////                               client2.newCall(request2).enqueue(object: Callback{
-////                                   override fun onFailure(call: Call?, e: IOException?) {
-////                                       Log.i("requeststatus","Request Failed")
-////
-////                                   }
-////
-////                                   override fun onResponse(call: Call?, response: Response?) {
-////                                       Log.i("requeststatus","Request Success")
-////                                       val body = response?.body()?.string()
-////                                       Log.i("requeststatus",body)
-////
-////                                       val gson = GsonBuilder().create()
-////                                       val Mainobject = gson.fromJson(body, mainobject::class.java)
-////                                       Log.i("requeststatus",Mainobject.name+Mainobject.address+Mainobject.photos[0])
-////                                       listofmainobject.add(Mainobject)
-////
-////                                   }
-////
-////                               })
-////                           }
-//                       }
-//                   },3000)
-
-//                    Handler().postDelayed({
-//                        val rv = findViewById<RecyclerView>(R.id.recommendationrv)
-//                        val llm = LinearLayoutManager(this@Recommendation)
-//                        rv.layoutManager=llm
-//                        Log.i("requeststatus",listofmainobject.size.toString())
-//                        rv.adapter = recommendationrecycleradapter(listofmainobject,this@Recommendation,arraystring)
-//                    },5000)
 
                 }
 
@@ -247,49 +188,66 @@ class Recommendation : AppCompatActivity() {
                 val vatbool: Boolean; val prangebool: Boolean; val deliverybool: Boolean; val vattemp: String; val prangetemp: String
                 val bikepark: String; val carpark: String; val smokecheck: String; val deliverycheck: String
                 if (view.parkingbikecheckpreferences.isChecked){
-                    bikepark = "yes"
+                    bikepark = "YES"
                 }else{
-                    bikepark = "no"
+                    bikepark = "NO"
                 }
 
                 if (view.parkingcarcheckpreferences.isChecked){
-                    carpark = "yes"
+                    carpark = "YES"
                 }else{
-                    carpark = "no"
+                    carpark = "NO"
                 }
 
                 if (view.smokingcheckpreferences.isChecked){
-                    smokecheck = "yes"
+                    smokecheck = "YES"
                 }else{
-                    smokecheck = "no"
+                    smokecheck = "NO"
                 }
 
                 if (view.deliverycheckpreferences.isChecked){
-                    deliverycheck = "yes"
+                    deliverycheck = "YES"
                 }else{
-                    deliverycheck = "no"
+                    deliverycheck = "NO"
                 }
 
 
-                vattemp = view.vatselect.selectedItem.toString()
-                prangetemp = view.priceselect.selectedItem.toString()
+                vattemp = view.vatselect.selectedItem.toString().toUpperCase()
+                prangetemp = view.priceselect.selectedItem.toString().toUpperCase()
                 vatbool = vattemp != "No"
                 prangebool = prangetemp != "Any"
-                val userpreferences: preferences_class = preferences_class(mAuth.currentUser?.email.toString()
-                        ,bikepark
-                        ,carpark
-                        ,smokecheck
-                        ,vattemp
-                        ,prangetemp
-                        ,deliverycheck)
-                Log.i("selecteditem",userpreferences.email
-                        +userpreferences.bike_parking+userpreferences.car_parking
-                        +userpreferences.vat+userpreferences.prange+userpreferences.delivery)
+
                 doAsync {
+                    val userpreferences: preferences_class = preferences_class(mAuth.currentUser?.email.toString()
+                            ,bikepark
+                            ,carpark
+                            ,smokecheck
+                            ,vattemp
+                            ,prangetemp
+                            ,deliverycheck)
+                    Log.i("selecteditem",userpreferences.email
+                            +userpreferences.bike_parking+userpreferences.car_parking+userpreferences.smoking
+                            +userpreferences.vat+userpreferences.prange+userpreferences.delivery)
+                    Log.i("selecteditem","POSTING POSTING POSTING")
                     AndroidNetworking.post(postpreferencesurl).addBodyParameter(userpreferences)
-                            .setTag("preferencesetup").setPriority(Priority.MEDIUM)
-                            .build()
+                            .setPriority(Priority.MEDIUM).setTag("userpreference").build()
+                            .getAsJSONArray(object : JSONArrayRequestListener{
+                                override fun onResponse(response: JSONArray?) {
+
+                                }
+
+                                override fun onError(anError: ANError?) {
+
+                                }
+
+                            })
+                    Log.i("selecteditem","POSTED POSTED POSTED")
+
+                    uiThread {
+                        dialog.dismiss()
+                    }
                 }
+
             }
         }
 

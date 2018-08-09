@@ -125,6 +125,12 @@ class MainActivity : AppCompatActivity() {
                                                         //val mD = FirebaseDatabase.getInstance().getReference("users")
                                                         Toast.makeText(this@MainActivity,"New User Created",Toast.LENGTH_LONG).show()
                                                         user = mAuth.currentUser
+                                                        user?.sendEmailVerification()?.addOnSuccessListener {
+                                                            Log.i("requeststatus","Email Verification Sent")
+                                                        }?.addOnFailureListener {
+                                                            Log.i("requeststatus","Email Verification Not Sent")
+
+                                                        }
                                                         doAsync {
                                                             val thenewuser = userinfo(view.dialogname.text.toString(),view.registeremail.text.toString())
                                                             AndroidNetworking.post(defaulturl+"api/newuser/").addBodyParameter(thenewuser)

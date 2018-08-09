@@ -8,7 +8,7 @@
     <color name="black_overlay">#66000000</color>
     <color name="transparent">#fff</color>
     <color name="strokecolor">#d06666</color>
-    <color name="linkcolor">#0000EE</color>
+    <color name="linkcolor">#000080</color>
     <color name="textred">#CD0E0E</color>
     <color name="textgreen">#39CD0E</color>
     <color name="mainbackground">#303030</color>
