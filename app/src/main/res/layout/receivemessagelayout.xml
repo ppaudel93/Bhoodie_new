@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/roundedsendmessage"
+        android:background="@drawable/other_message_bubble"
         android:maxWidth="300dp"
         android:padding="8dp"
         android:text="hi man, how are you?"
