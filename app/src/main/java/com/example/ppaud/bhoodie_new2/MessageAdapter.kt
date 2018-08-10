@@ -64,7 +64,7 @@ class MessageAdapter (val context: Context): RecyclerView.Adapter<MessageViewHol
 
         override fun bind(message: chatactivity.Message) {
             messageText.text = message.message
-            timeText.text = DateUtils.fromMillisToTimeString(message.time)
+            timeText.text = message.time
         }
     }
     inner class OtherMessageViewHolder (view: View) : MessageViewHolder(view) {
@@ -74,8 +74,8 @@ class MessageAdapter (val context: Context): RecyclerView.Adapter<MessageViewHol
 
         override fun bind(message: chatactivity.Message) {
             messageText.text = message.message
-            userText.text = message.receiver
-            timeText.text = DateUtils.fromMillisToTimeString(message.time)
+            userText.text = message.sender
+            timeText.text = message.time
         }
     }
 

@@ -127,6 +127,7 @@ class PlaceInfo : AppCompatActivity() {
                     Log.i("requeststatus","Request Success 123123123")
                     val body = response?.body()?.string()
                     val gson = GsonBuilder().create()
+                    Log.i("requeststatus",body)
                     val Mainobject = gson.fromJson(body,mainobject::class.java)
                     Log.i("requeststatus",Mainobject.name)
 
