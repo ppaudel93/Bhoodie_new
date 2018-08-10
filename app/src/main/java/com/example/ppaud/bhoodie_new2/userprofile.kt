@@ -16,6 +16,7 @@ class userprofile : AppCompatActivity() {
         setContentView(R.layout.activity_userprofile)
 
         profileback.setOnClickListener {
+            startActivity<MapsActivity>()
             finish()
         }
         userlogout.setOnClickListener{
@@ -24,7 +25,7 @@ class userprofile : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-        profileemail.text = mAuth.currentUser.toString()
+        profileemail.text = mAuth.currentUser?.email.toString()
         //profilefullname.text =
     }
 

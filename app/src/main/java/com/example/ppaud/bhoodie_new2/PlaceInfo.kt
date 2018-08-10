@@ -22,6 +22,7 @@ import android.text.style.UnderlineSpan
 import android.transition.Slide
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.view.Window
 import android.widget.*
 import com.androidnetworking.AndroidNetworking
@@ -36,6 +37,7 @@ import kotlinx.android.synthetic.main.activity_place_info.*
 import kotlinx.android.synthetic.main.menuitemadddialog.view.*
 import kotlinx.android.synthetic.main.moreplaceinfodialog.view.*
 import kotlinx.android.synthetic.main.preferences.view.*
+import kotlinx.android.synthetic.main.reviewdialog.view.*
 import okhttp3.*
 import org.jetbrains.anko.*
 import org.json.JSONArray
@@ -58,6 +60,7 @@ class PlaceInfo : AppCompatActivity() {
     private val LOCATION_REQUEST_CODE=101
     private var imageurlcount: Int = 0
     private lateinit var dialog2: ProgressDialog
+    var Getresinfo: ResInfoGet = ResInfoGet("","","","","","")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -147,6 +150,45 @@ class PlaceInfo : AppCompatActivity() {
                     for(item in reviewitems){
                         temp3.add(item)
                     }
+                    val request3 = Request.Builder().url(defaulturl+"/api/resinfo/id=$placeid").build()
+                    val client3 = OkHttpClient()
+                    Log.i("requeststatus",defaulturl+"/api/resinfo/id=$placeid")
+                    client3.newCall(request3).enqueue(object: Callback{
+                        override fun onFailure(call: Call?, e: IOException?) {
+                            Log.i("requeststatus","Request Failed for restaurant info")
+
+                        }
+
+                        override fun onResponse(call: Call?, response: Response?) {
+                            Log.i("requeststatus","Request Success for restaurant info")
+                            val body3 = response?.body()?.string()
+                            val gson3 = GsonBuilder().create()
+                            Getresinfo = gson3.fromJson(body3,ResInfoGet::class.java)
+
+                        }
+
+                    })
+
+//                    val request2 = Request.Builder().url(defaulturl+"/api/review/id=$placeid").build()
+//                    val client2 = OkHttpClient()
+//                    client2.newCall(request2).enqueue(object: Callback{
+//                        override fun onFailure(call: Call?, e: IOException?) {
+//                            Log.i("requeststatus","Request Failed")
+//
+//                        }
+//
+//                        override fun onResponse(call: Call?, response: Response?) {
+//                            Log.i("requeststatus","Request Success")
+//                            val body = response?.body()?.string()
+//                            val gson = GsonBuilder().create()
+//                            val receiveReview = gson.fromJson(body,ReceiveReview::class.java)
+//                            for (item in receiveReview.reviews){
+//                                val review = Review(item.email,item.comment)
+//                                temp3.add(review)
+//                            }
+//                        }
+//
+//                    })
 
 
             uiThread {
@@ -255,6 +297,9 @@ class PlaceInfo : AppCompatActivity() {
                 val smokingbutton = findViewById<ImageView>(R.id.smokingcheck)
                 val vatbutton = findViewById<ImageView>(R.id.vatcheck)
                 val deliverybutton = findViewById<ImageView>(R.id.deliverycheck)
+                val pricelow = findViewById<ImageView>(R.id.checklow)
+                val pricemid = findViewById<ImageView>(R.id.checkmid)
+                val pricehigh = findViewById<ImageView>(R.id.checkhigh)
                 val view = View.inflate(this@PlaceInfo,R.layout.moreplaceinfodialog,null)
                 val view2=View.inflate(this@PlaceInfo,R.layout.menuitemadddialog,null)
                 val view3 = View.inflate(this@PlaceInfo,R.layout.reviewdialog,null)
@@ -273,10 +318,42 @@ class PlaceInfo : AppCompatActivity() {
                 smokingbutton.isClickable=true
                 vatbutton.isClickable=true
                 deliverybutton.isClickable=true
+                pricelow.isClickable = true
+                pricemid.isClickable = true
+                pricehigh.isClickable = true
                 addfoodbutton.isClickable=true
+
                 placeratingbar.setOnRatingBarChangeListener { ratingBar, rating, fromUser ->
                     dialog3.show()
                     dialog3.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                    view3.revieweditdialog
+                    view3.sendreview.setOnClickListener {
+                        doAsync {
+                            val sendReview = SendReview(mAuth.currentUser?.email.toString(),placeid,rating.toInt()
+                            ,view3.revieweditdialog.text.toString())
+                            AndroidNetworking.post(defaulturl+"/api/review/").addBodyParameter(sendReview)
+                                    .setPriority(Priority.MEDIUM).setTag("placereview").build()
+                                    .getAsJSONArray(object: JSONArrayRequestListener{
+                                        override fun onResponse(response: JSONArray?) {
+
+                                        }
+
+                                        override fun onError(anError: ANError?) {
+
+                                        }
+
+                                    })
+                            uiThread {
+                                dialog3.dismiss()
+                                finish()
+                                startActivity(intent)
+                            }
+                        }
+
+
+
+
+                    }
                 }
 
                 val adapter: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(this@PlaceInfo,R.array.vatoption, android.R.layout.simple_spinner_dropdown_item)
@@ -286,27 +363,89 @@ class PlaceInfo : AppCompatActivity() {
                 val adapter2: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(this@PlaceInfo,R.array.priceoption, android.R.layout.simple_spinner_dropdown_item)
                 adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 view.priceselectplaceinfo.adapter=adapter2
+                Handler().postDelayed({
+                    Log.i("getrescheck","Checking Checking"+Getresinfo.bike_parking+Getresinfo.car_parking+Getresinfo.delivery+Getresinfo.prange)
+                    if (Getresinfo.bike_parking=="") {
+                        bikebutton.setOnClickListener {
+                            dialog.show()
+                            dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                        }
+                        carbutton.setOnClickListener {
+                            dialog.show()
+                            dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                        }
+                        smokingbutton.setOnClickListener {
+                            dialog.show()
+                            dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                        }
+                        vatbutton.setOnClickListener {
+                            dialog.show()
+                            dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                        }
+                        deliverybutton.setOnClickListener {
+                            dialog.show()
+                            dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                        }
+                        pricelow.setOnClickListener {
+                            dialog.show()
+                            dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                        }
+                        pricemid.setOnClickListener {
+                            dialog.show()
+                            dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                        }
+                        pricehigh.setOnClickListener {
+                            dialog.show()
+                            dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                        }
+                    } else{
+                        bikebutton.isClickable = false
+                        carbutton.isClickable = false
+                        smokingbutton.isClickable = false
+                        vatbutton.isClickable = false
+                        pricelow.isClickable = false
+                        pricemid.isClickable = false
+                        pricehigh.isClickable = false
 
-                bikebutton.setOnClickListener{
-                    dialog.show()
-                    dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                }
-                carbutton.setOnClickListener {
-                    dialog.show()
-                    dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                }
-                smokingbutton.setOnClickListener {
-                    dialog.show()
-                    dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                }
-                vatbutton.setOnClickListener {
-                    dialog.show()
-                    dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                }
-                deliverybutton.setOnClickListener {
-                    dialog.show()
-                    dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                }
+                        if (Getresinfo.bike_parking=="YES")
+                            bikebutton.background = getDrawable(R.drawable.tickmarkgreen)
+                        if (Getresinfo.bike_parking=="NO")
+                            bikebutton.background = getDrawable(R.drawable.crossmarkred)
+                        if (Getresinfo.car_parking=="YES")
+                            carbutton.background = getDrawable(R.drawable.tickmarkgreen)
+                        if (Getresinfo.car_parking=="NO")
+                            carbutton.background = getDrawable(R.drawable.crossmarkred)
+                        if (Getresinfo.smoking=="YES")
+                            smokingbutton.background = getDrawable(R.drawable.tickmarkgreen)
+                        if (Getresinfo.smoking=="NO")
+                            smokingbutton.background = getDrawable(R.drawable.crossmarkred)
+                        if (Getresinfo.vat=="ANY")
+                            vatbutton.background = getDrawable(R.drawable.tickmarkgreen)
+                        if (Getresinfo.vat=="NO")
+                            vatbutton.background = getDrawable(R.drawable.crossmarkred)
+                        if (Getresinfo.prange=="LOW") {
+                            pricelow.background = getDrawable(R.drawable.greenmoney)
+                            pricemid.visibility = View.INVISIBLE
+                            pricehigh.visibility = View.INVISIBLE
+                        }
+                        if (Getresinfo.prange=="MED") {
+                            pricelow.background = getDrawable(R.drawable.bluemoney)
+                            pricemid.background = getDrawable(R.drawable.bluemoney)
+                            pricehigh.visibility = View.INVISIBLE
+                        }
+                        if (Getresinfo.prange=="HIGH"){
+                            pricelow.background = getDrawable(R.drawable.redmoney)
+                            pricemid.background = getDrawable(R.drawable.redmoney)
+                            pricehigh.background = getDrawable(R.drawable.redmoney)
+                        }
+                        if (Getresinfo.delivery=="YES")
+                            deliverybutton.background = getDrawable(R.drawable.tickmarkgreen)
+                        if (Getresinfo.delivery=="NO")
+                            deliverybutton.background = getDrawable(R.drawable.crossmarkred)
+                    }
+                },2000)
+
+
                 view.submitbuttondialog.setOnClickListener {
                     doAsync {
                         val bikeparkinfo: String;val carparkinfo: String;val smokinginfo: String
@@ -341,6 +480,9 @@ class PlaceInfo : AppCompatActivity() {
                                     }
 
                                 })
+                        dialog.dismiss()
+                        finish()
+                        startActivity(intent)
                     }
                 }
                 addfoodbutton.setOnClickListener {
@@ -374,6 +516,8 @@ class PlaceInfo : AppCompatActivity() {
                                         view2.foodname.setText("")
                                         view2.foodprice.setText("")
                                         dialog2.dismiss()
+                                        finish()
+                                        startActivity(intent)
                                     }
 
 
@@ -404,4 +548,12 @@ class PlaceInfo : AppCompatActivity() {
     class Review(val name: String,val text: String)
 
     class RestaurantInfos(val placeid: String,val bike_parking: String,val car_parking: String,val smoking: String,val vat: String,val prange: String,val delivery: String)
+
+    class ResInfoGet(val bike_parking: String,val car_parking: String,val smoking: String,val vat: String,val prange: String,val delivery: String)
+
+    class SendReview(val email: String,val placeid: String,val rating: Int,val comment: String)
+
+    class ReceiveReview(val reviews: List<SingleReview>)
+
+    class SingleReview(val email: String,val rating: Int,val comment: String)
 }

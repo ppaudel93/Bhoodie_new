@@ -245,6 +245,8 @@ class Recommendation : AppCompatActivity() {
 
                     uiThread {
                         dialog.dismiss()
+                        finish()
+                        startActivity(intent)
                     }
                 }
 

@@ -250,7 +250,7 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginEnd="10dp"
-                    android:src="@drawable/plusmark" />
+                    android:background="@drawable/plusmark" />
 
                 <ImageView
                     android:id="@+id/parkingcar"
@@ -264,7 +264,7 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginEnd="10dp"
-                    android:src="@drawable/plusmark" />
+                    android:background="@drawable/plusmark" />
 
             </LinearLayout>
 
@@ -291,7 +291,7 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginEnd="10dp"
-                    android:src="@drawable/plusmark" />
+                    android:background="@drawable/plusmark" />
 
             </LinearLayout>
 
@@ -322,7 +322,7 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginEnd="10dp"
-                    android:src="@drawable/plusmark" />
+                    android:background="@drawable/plusmark" />
 
 
             </LinearLayout>
@@ -350,7 +350,45 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginEnd="10dp"
-                    android:src="@drawable/plusmark" />
+                    android:background="@drawable/plusmark" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/strokecolor" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/priceicon"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/moneyinfo" />
+
+                <ImageView
+                    android:id="@+id/checklow"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/plusmark" />
+
+                <ImageView
+                    android:id="@+id/checkmid"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/plusmark" />
+
+                <ImageView
+                    android:id="@+id/checkhigh"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/plusmark" />
 
             </LinearLayout>
 
@@ -374,7 +412,7 @@
                     android:layout_height="25dp"
                     android:layout_gravity="end|top"
                     android:layout_marginTop="7dp"
-                    android:src="@drawable/plusmark" />
+                    android:background="@drawable/plusmark" />
 
             </FrameLayout>
 
