@@ -18,6 +18,7 @@
         android:textAlignment="center"/>
 
     <Button
+        android:id="@+id/sendreview"
         android:layout_width="150dp"
         android:layout_height="50dp"
         android:background="@drawable/roundedbutton"

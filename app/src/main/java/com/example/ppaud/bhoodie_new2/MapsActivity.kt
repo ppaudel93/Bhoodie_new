@@ -7,6 +7,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.*
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Camera
@@ -128,7 +129,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun getURL(from: LatLng,to: LatLng): String{
         val origin = "origin="+from.latitude+","+from.longitude
         val dest="destination="+to.latitude+","+to.longitude
-        val sensor = "sensor=false"
+        val key = resources.getString(R.string.google_key_second)
+        val sensor = "key=$key"
         val params = "$origin&$dest&$sensor"
         val output = "json"
         Log.i("urlbro","https://maps.googleapis.com/maps/api/directions/json?$params")
@@ -240,7 +242,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             dialog.dismiss()
                         }
                         view.chatbutton.setOnClickListener {
-                            startActivity<chatactivity>()
+                            val intent = Intent(this@MapsActivity,chatactivity::class.java)
+                            intent.putExtra("placeid",tempid)
+                            intent.putExtra("rating",temprating)
+                            intent.putExtra("openornot",openornot)
+                            dialog.dismiss()
+                            startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(this@MapsActivity).toBundle())
                         }
                         view.placeinfobutton.setOnClickListener {
                             Log.i("placeid","The Placeid is $tempid")
@@ -330,7 +337,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
         navigationView.setNavigationItemSelectedListener {
-            it.isChecked = true
             if (it.itemId == recommend_id){
                 startActivity<Recommendation>()
                 finish()
@@ -343,6 +349,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
             if (it.itemId == about_id){
                 startActivity<aboutus>()
+                finish()
             }
             if (it.itemId == favs_id){}
 

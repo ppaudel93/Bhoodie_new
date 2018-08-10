@@ -5,6 +5,7 @@ import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_aboutus.*
 import org.jetbrains.anko.browse
 import org.jetbrains.anko.email
+import org.jetbrains.anko.startActivity
 
 class aboutus : AppCompatActivity() {
 
@@ -13,6 +14,7 @@ class aboutus : AppCompatActivity() {
         setContentView(R.layout.activity_aboutus)
         aboutusback.setOnClickListener {
             finish()
+            startActivity<MapsActivity>()
         }
         prayogemail.setOnClickListener {
             email(prayogemail.text.toString(),"About Bhoodie Project"

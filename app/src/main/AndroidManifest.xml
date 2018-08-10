@@ -55,7 +55,9 @@
         <activity
             android:name=".PlaceInfo"
             android:exported="true" />
-        <activity android:name=".chatactivity" />
+        <activity android:name=".chatactivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".userprofile" />
         <activity android:name=".aboutus"
             android:exported="true"></activity>
