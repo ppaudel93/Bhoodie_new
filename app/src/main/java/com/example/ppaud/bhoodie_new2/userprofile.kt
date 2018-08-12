@@ -62,7 +62,6 @@ class userprofile : AppCompatActivity() {
             finish()
         }
         profileemail.text = mAuth.currentUser?.email.toString()
-        //profilefullname.text =
     }
 
     override fun onBackPressed() {

@@ -24,6 +24,7 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
@@ -33,6 +34,7 @@ import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.gson.GsonBuilder
+import kotlinx.android.synthetic.main.activity_chatactivity.*
 import kotlinx.android.synthetic.main.activity_place_info.*
 import kotlinx.android.synthetic.main.menuitemadddialog.view.*
 import kotlinx.android.synthetic.main.moreplaceinfodialog.view.*
@@ -269,7 +271,7 @@ class PlaceInfo : AppCompatActivity() {
 
                 dialog2.dismiss()
                 if (photourl.isNotEmpty()){
-                    //imageview.layoutParams.height= wrapContent
+                    imageview.layoutParams.height= wrapContent
                     Glide.with(this@PlaceInfo).load(photourl[imageurlcount]).into(imageview)
                     //Glide.with(this@PlaceInfo).load(photourl[imageurlcount]).into(imageview)
                     //imageview.layoutParams.height= wrapContent
@@ -281,7 +283,7 @@ class PlaceInfo : AppCompatActivity() {
                             imageurlcount=0
                         }
                         Glide.with(this@PlaceInfo).load(photourl[imageurlcount]).into(imageview)
-                        //imageview.layoutParams.height= wrapContent
+                        imageview.layoutParams.height= wrapContent
 
                     }
                     previousbutton.setOnClickListener{
@@ -290,7 +292,7 @@ class PlaceInfo : AppCompatActivity() {
                             imageurlcount=photourl.size-1
                         }
                         Glide.with(this@PlaceInfo).load(photourl[imageurlcount]).into(imageview)
-                        //imageview.layoutParams.height= wrapContent
+                        imageview.layoutParams.height= wrapContent
                     }
                 }
                 val bikebutton = findViewById<ImageView>(R.id.parkingbikecheck)
@@ -345,7 +347,9 @@ class PlaceInfo : AppCompatActivity() {
 
                                     })
                             uiThread {
+                                view3.revieweditdialog.text.clear()
                                 dialog3.dismiss()
+                                resetInput()
                                 finish()
                                 startActivity(intent)
                             }
@@ -497,6 +501,7 @@ class PlaceInfo : AppCompatActivity() {
                                 var placeid = intent.getStringExtra("placeid")
                                 val newfood: Menus = Menus(view2.foodname.text.toString(),view2.foodprice.text.toString().toInt(),0,placeid)
                                 doAsync {
+                                    Log.i("requeststatus",newfood.name+newfood.price+newfood.placeid)
                                     AndroidNetworking.post(defaulturl+"/api/newfood/")
                                             .addBodyParameter(newfood).setPriority(Priority.MEDIUM)
                                             .setTag("newfood").build()
@@ -514,9 +519,10 @@ class PlaceInfo : AppCompatActivity() {
                                             })
 
                                     uiThread {
-                                        view2.foodname.setText("")
-                                        view2.foodprice.setText("")
+                                        view2.foodname.text.clear()
+                                        view2.foodprice.text.clear()
                                         dialog2.dismiss()
+                                        resetInput()
                                         finish()
                                         startActivity(intent)
                                     }
@@ -536,6 +542,18 @@ class PlaceInfo : AppCompatActivity() {
 
         }
 
+    }
+
+    private fun resetInput() {
+        // Clean text box
+       // txtMessage.text.clear()
+
+        // Hide keyboard
+        val inputManager =
+                getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputManager.hideSoftInputFromWindow(
+                currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS
+        )
     }
 
     private fun requestPermission(permissionType: String,requestCode: Int){

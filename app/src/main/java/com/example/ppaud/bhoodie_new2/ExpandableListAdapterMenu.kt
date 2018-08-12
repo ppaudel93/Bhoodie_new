@@ -93,6 +93,7 @@ class ExpandableListAdapterMenu(var context: Context,var expandableListView: Exp
             Log.i("selecteditem",placeid)
             doAsync {
                 val votesend = votingclass(placeid,getChild(groupPosition,childPosition).name,"DOWN")
+                Log.i("requeststatus",votesend.name+votesend.vote)
                 AndroidNetworking.post("https://bhoodie.herokuapp.com/api/voting/")
                         .addBodyParameter(votesend).setPriority(Priority.MEDIUM)
                         .setTag("foodvote").build()
