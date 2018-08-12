@@ -94,12 +94,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var openornot: Boolean = false
     private var notificationManager: NotificationManager? = null
 
-    fun startRepeatingTask(){
-        mStatusChecker.run()
-    }
-    fun stopRepeatingTask(){
-        Handler().removeCallbacks(mStatusChecker)
-    }
+//    fun startRepeatingTask(){
+//        mStatusChecker.run()
+//    }
+//    fun stopRepeatingTask(){
+//        Handler().removeCallbacks(mStatusChecker)
+//    }
 
     private fun senduserlocation(userlocation: LatLng){
             val request = Request.Builder().url(defaulturl+"/api/places/lat=${userlocation.latitude}&long=${userlocation.longitude}").build()
@@ -107,10 +107,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             val client = OkHttpClient()
             client.newCall(request).enqueue(object: Callback{
                 override fun onFailure(call: Call?, e: IOException?) {
-
+                    Log.i("requeststatus","Request Failed")
                 }
 
                 override fun onResponse(call: Call?, response: Response?) {
+                    Log.i("requeststatus","Request Successful")
                     val body=response?.body()?.string()
                     val gson = GsonBuilder().create()
                     val Mainclass = gson.fromJson(body,mainclass::class.java)
@@ -121,8 +122,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             })
 
 
-//        val client=OkHttpClient()
-//        val response=client.newCall(request).execute()
 
     }
 
@@ -179,7 +178,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     val temproute=Directionmain.routes
                     val templeg=temproute[0].legs
                     val directionsteps = templeg[0].steps
-                    var polypts: List<LatLng> = ArrayList(2000)
+                    var polypts: List<LatLng> = ArrayList()
                     polypts = directionsteps.flatMap { decodePoly(it.polyline.points) }
                     var options = PolylineOptions()
                     options.color(Color.RED)
@@ -187,6 +186,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     options.addAll(polypts)
                     uiThread {
                         val polyline = mMap!!.addPolyline(options)
+                        repopulate()
 
 
                     }
@@ -213,66 +213,63 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
     }
-    val mStatusChecker= object: Runnable {
-        override fun run(){
-            if (mMap!!.cameraPosition.zoom>7.0)
-            {
-                for (item in Results){
-                    var placemarker = mMap!!.addMarker(MarkerOptions()
-                            .position(LatLng(item.location.lat,item.location.lng)).title(item.name)
-                            .icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
-                    mMap!!.setOnMarkerClickListener {
-                        for(result in Results){
-                            if (it.title==result.name){
-                                tempid = result.id
-                                temprating=result.rating.toString()
-                                openornot=result.open
-                            }
-                        }
-                        val view = View.inflate(this@MapsActivity,R.layout.mapsdialogbox,null)
-                        val builder = AlertDialog.Builder(this@MapsActivity)
-                        builder.setView(view)
-                        val dialog: AlertDialog = builder.create()
-                        dialog.show()
-                        dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                        view.placename.text=it.title
-                        val destination: LatLng = it.position
-                        view.directionbutton.setOnClickListener {
-                            getdirections(LatLng(userlocation!!.latitude,userlocation!!.longitude),destination)
-                            dialog.dismiss()
-                        }
-                        view.chatbutton.setOnClickListener {
-                            val intent = Intent(this@MapsActivity,chatactivity::class.java)
-                            intent.putExtra("placeid",tempid)
-                            intent.putExtra("rating",temprating)
-                            intent.putExtra("openornot",openornot)
-                            dialog.dismiss()
-                            startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(this@MapsActivity).toBundle())
-                        }
-                        view.placeinfobutton.setOnClickListener {
-                            Log.i("placeid","The Placeid is $tempid")
-                            val intent = Intent(this@MapsActivity,PlaceInfo::class.java)
-                            intent.putExtra("placeid",tempid)
-                            intent.putExtra("rating",temprating)
-                            intent.putExtra("openornot",openornot)
-                            dialog.dismiss()
-//                            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
-//                                //swap with animations
-//                            }else{
-//                                //swap without animations
+//    val mStatusChecker= object: Runnable {
+//        override fun run(){
+//            if (mMap!!.cameraPosition.zoom>7.0)
+//            {
+//                for (item in Results){
+//                    var placemarker = mMap!!.addMarker(MarkerOptions()
+//                            .position(LatLng(item.location.lat,item.location.lng)).title(item.name)
+//                            .icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
+//                    mMap!!.setOnMarkerClickListener {
+//                        for(result in Results){
+//                            if (it.title==result.name){
+//                                tempid = result.id
+//                                temprating=result.rating.toString()
+//                                openornot=result.open
 //                            }
-                            startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(this@MapsActivity).toBundle())
-                        }
-                        return@setOnMarkerClickListener false
-                    }
-                }
-            }
-            else
-            {mMap!!.clear()}
-            Log.i("asd","asd")
-            Handler().postDelayed(this,5000)
-        }
-    }
+//                        }
+//                        val view = View.inflate(this@MapsActivity,R.layout.mapsdialogbox,null)
+//                        val builder = AlertDialog.Builder(this@MapsActivity)
+//                        builder.setView(view)
+//                        val dialog: AlertDialog = builder.create()
+//                        dialog.show()
+//                        dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+//                        view.placename.text=it.title
+//                        val destination: LatLng = it.position
+//                        view.directionbutton.setOnClickListener {
+//                            getdirections(LatLng(userlocation!!.latitude,userlocation!!.longitude),destination)
+//                            dialog.dismiss()
+//                        }
+//                        view.chatbutton.setOnClickListener {
+//                            val intent = Intent(this@MapsActivity,chatactivity::class.java)
+//                            intent.putExtra("placeid",tempid)
+//                            intent.putExtra("rating",temprating)
+//                            intent.putExtra("userlat",userlocation?.latitude)
+//                            intent.putExtra("userlng",userlocation?.longitude)
+//                            intent.putExtra("openornot",openornot)
+//                            dialog.dismiss()
+//                            startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(this@MapsActivity).toBundle())
+//                        }
+//                        view.placeinfobutton.setOnClickListener {
+//                            Log.i("placeid","The Placeid is $tempid")
+//                            val intent = Intent(this@MapsActivity,PlaceInfo::class.java)
+//                            intent.putExtra("placeid",tempid)
+//                            intent.putExtra("rating",temprating)
+//                            intent.putExtra("openornot",openornot)
+//                            dialog.dismiss()
+//                            startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(this@MapsActivity).toBundle())
+//                        }
+//                        return@setOnMarkerClickListener false
+//                    }
+//                }
+//            }
+//            else
+//            {mMap!!.clear()}
+//            Log.i("asd","asd")
+//            Handler().postDelayed(this,5000)
+//        }
+//    }
 
     private fun createNofificationChannel(id: String,name: String,description: String){
         val importance = NotificationManager.IMPORTANCE_LOW
@@ -463,13 +460,70 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
         }
-        val timer= fixedRateTimer(name="locationsender",initialDelay = 10000,period=10000000){
-            senduserlocation(LatLng(userlocation!!.latitude,userlocation!!.longitude))
 
-        }
+        Handler().postDelayed({
+            repopulate()
+//            mMap?.moveCamera(CameraUpdateFactory.zoomBy(7.0,))
+        },10000)
+        Handler().postDelayed({
+            senduserlocation(LatLng(userlocation!!.latitude,userlocation!!.longitude))
+        },5000)
+//        val timer= fixedRateTimer(name="locationsender",initialDelay = 10000,period=10000000){
+//
+//
+//        }
         mMap?.setMinZoomPreference(2.0f)
         mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(27.825526, 85.289675),6.0f))
-        startRepeatingTask()
+        //startRepeatingTask()
+    }
+
+    private fun repopulate(){
+        for (item in Results){
+            var placemarker = mMap!!.addMarker(MarkerOptions()
+                    .position(LatLng(item.location.lat,item.location.lng)).title(item.name)
+                    .icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b,100,100,false))))
+            mMap!!.setOnMarkerClickListener {
+                for(result in Results){
+                    if (it.title==result.name){
+                        tempid = result.id
+                        temprating=result.rating.toString()
+                        openornot=result.open
+                    }
+                }
+                val view = View.inflate(this@MapsActivity,R.layout.mapsdialogbox,null)
+                val builder = AlertDialog.Builder(this@MapsActivity)
+                builder.setView(view)
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+                dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                view.placename.text=it.title
+                val destination: LatLng = it.position
+                view.directionbutton.setOnClickListener {
+                    getdirections(LatLng(userlocation!!.latitude,userlocation!!.longitude),destination)
+                    dialog.dismiss()
+                }
+                view.chatbutton.setOnClickListener {
+                    val intent = Intent(this@MapsActivity,chatactivity::class.java)
+                    intent.putExtra("placeid",tempid)
+                    intent.putExtra("rating",temprating)
+                    intent.putExtra("userlat",userlocation?.latitude)
+                    intent.putExtra("userlng",userlocation?.longitude)
+                    intent.putExtra("openornot",openornot)
+                    dialog.dismiss()
+                    startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(this@MapsActivity).toBundle())
+                }
+                view.placeinfobutton.setOnClickListener {
+                    Log.i("placeid","The Placeid is $tempid")
+                    val intent = Intent(this@MapsActivity,PlaceInfo::class.java)
+                    intent.putExtra("placeid",tempid)
+                    intent.putExtra("rating",temprating)
+                    intent.putExtra("openornot",openornot)
+                    dialog.dismiss()
+                    startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(this@MapsActivity).toBundle())
+                }
+                return@setOnMarkerClickListener false
+            }
+        }
     }
 
 

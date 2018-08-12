@@ -2,6 +2,7 @@ package com.example.ppaud.bhoodie_new2
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -33,7 +34,6 @@ import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONArrayRequestListener
-import com.github.kittinunf.fuel.Fuel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
@@ -49,9 +49,6 @@ import okhttp3.*
 import org.jetbrains.anko.*
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.IOException
-import java.nio.charset.Charset
-import java.text.Normalizer
 import kotlin.concurrent.thread
 
 
@@ -60,13 +57,12 @@ private val SMS_REQUEST_CODE=101
 class MainActivity : AppCompatActivity() {
     private val RC_SIGN_IN = 123
     var mAuth = FirebaseAuth.getInstance()!!
+    private lateinit var dialog: ProgressDialog
     var user: FirebaseUser? = null
     fun showSnackbar(id: Int,layout: LinearLayout){
         Snackbar.make(layout,resources.getString(id),Snackbar.LENGTH_LONG).show()
     }
 
-    private val JSON = MediaType.parse("application/json; charset=utf-8")
-    private val plaintext = MediaType.parse("text/plain; charset=utf-8")
 
     override fun onStart() {
         super.onStart()
@@ -97,11 +93,15 @@ class MainActivity : AppCompatActivity() {
 
         mAuth=FirebaseAuth.getInstance()
         loginbutton.setOnClickListener {
-            login(emaillogin.text.toString(),passwordlogin.text.toString())
-            val context: Context= this@MainActivity
-            val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(currentFocus.windowToken,InputMethodManager.HIDE_NOT_ALWAYS)
-            val dialog = indeterminateProgressDialog(message = "Please wait a bit...",title="Logging in")
+            if (isEmailValid(emaillogin.text.toString())) {
+                login(emaillogin.text.toString(), passwordlogin.text.toString())
+                val context: Context = this@MainActivity
+                val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(currentFocus.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+                //dialog = indeterminateProgressDialog(message = "Please wait a bit...",title="Logging in")
+            } else{
+                longToast("The Email entered is Invalid")
+            }
         }
         registerbutton.setOnClickListener {
             val builder = AlertDialog.Builder(this@MainActivity)
@@ -113,49 +113,53 @@ class MainActivity : AppCompatActivity() {
 
             view.alertbuttonregister.setOnClickListener {
                 //dialog.dismiss()
-                val context: Context= this@MainActivity
+                if (isEmailValid(view.registeremail.text.toString())) {
+                val context: Context = this@MainActivity
                 val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(currentFocus.windowToken,InputMethodManager.HIDE_NOT_ALWAYS)
-                val dialog2 = indeterminateProgressDialog(message = "Creating new user...",title="Registering")
-                mAuth.createUserWithEmailAndPassword(view.registeremail.text.toString(),view.registerpass.text.toString())
-                                                .addOnCompleteListener {
-                                                    if (it.isSuccessful){
-                                                        //view.dialogname
-                                                        Log.i("task_successful","New User created")
-                                                        //val mD = FirebaseDatabase.getInstance().getReference("users")
-                                                        Toast.makeText(this@MainActivity,"New User Created",Toast.LENGTH_LONG).show()
-                                                        user = mAuth.currentUser
-                                                        user?.sendEmailVerification()?.addOnSuccessListener {
-                                                            Log.i("requeststatus","Email Verification Sent")
-                                                        }?.addOnFailureListener {
-                                                            Log.i("requeststatus","Email Verification Not Sent")
+                imm.hideSoftInputFromWindow(currentFocus.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+                val dialog2 = indeterminateProgressDialog(message = "Creating new user...", title = "Registering")
+                mAuth.createUserWithEmailAndPassword(view.registeremail.text.toString(), view.registerpass.text.toString())
+                        .addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                //view.dialogname
+                                Log.i("task_successful", "New User created")
+                                //val mD = FirebaseDatabase.getInstance().getReference("users")
+                                dialog2.dismiss()
+                                Toast.makeText(this@MainActivity, "New User Created", Toast.LENGTH_LONG).show()
+                                user = mAuth.currentUser
+                                user?.sendEmailVerification()?.addOnSuccessListener {
+                                    longToast("Verification Email has been sent. Please verify your account.")
+                                    Log.i("requeststatus", "Email Verification Sent")
+                                }?.addOnFailureListener {
+                                    Log.i("requeststatus", "Email Verification Not Sent")
 
-                                                        }
-                                                        doAsync {
-                                                            val thenewuser = userinfo(view.dialogname.text.toString(),view.registeremail.text.toString())
-                                                            AndroidNetworking.post(defaulturl+"api/newuser/").addBodyParameter(thenewuser)
-                                                                    .setTag("test").setPriority(Priority.MEDIUM)
-                                                                    .build()
-                                                                    .getAsJSONArray(object: JSONArrayRequestListener{
-                                                                        override fun onResponse(response: JSONArray?) {
+                                }
+                                doAsync {
+                                    val thenewuser = userinfo(view.dialogname.text.toString(), view.registeremail.text.toString())
+                                    AndroidNetworking.post(defaulturl + "api/newuser/").addBodyParameter(thenewuser)
+                                            .setTag("test").setPriority(Priority.MEDIUM)
+                                            .build()
+                                            .getAsJSONArray(object : JSONArrayRequestListener {
+                                                override fun onResponse(response: JSONArray?) {
 
-                                                                        }
-
-                                                                        override fun onError(anError: ANError?) {
-
-                                                                        }
-
-                                                                    })
-                                                        }
-                                                        dialog.dismiss()
-                                                        login(view.registeremail.text.toString(),view.registerpass.text.toString())
-                                                    }
-                                                    else{
-
-                                                        Log.i("task_failed","User Creation falied")
-                                                        Toast.makeText(this@MainActivity,"User Registration Failed",Toast.LENGTH_LONG).show()
-                                                    }
                                                 }
+
+                                                override fun onError(anError: ANError?) {
+
+                                                }
+
+                                            })
+                                }
+                                dialog.dismiss()
+                                login(view.registeremail.text.toString(), view.registerpass.text.toString())
+                            } else {
+
+                                Log.i("task_failed", "User Creation falied")
+                                dialog2.dismiss()
+                                Toast.makeText(this@MainActivity, "User Registration Failed", Toast.LENGTH_LONG).show()
+                            }
+                        }
+            }else {longToast("The Email entered is Invalid")}
             }
 
         }
@@ -172,7 +176,7 @@ class MainActivity : AppCompatActivity() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(currentFocus.windowToken,InputMethodManager.HIDE_NOT_ALWAYS)
         //val dialog = progressDialog(message="Please wait a bit...",title="Logging In")
-        val dialog = indeterminateProgressDialog(message = "Please wait a bit...",title="Logging in")
+        dialog = indeterminateProgressDialog(message = "Please wait a bit...",title="Logging in")
         mAuth.signInWithEmailAndPassword(email,password)
                 .addOnCompleteListener{
                     if(it.isSuccessful){
@@ -187,7 +191,18 @@ class MainActivity : AppCompatActivity() {
                         Log.i("user_login","Login Failed")
 
                     }
+                }.addOnFailureListener {
+                    dialog.dismiss()
+                    longToast("Login failed. Email or Password may be incorrect or Internet may be unavailable")
+
                 }
 
+    }
+    private fun isEmailValid(email: String): Boolean{
+        if (email == null)
+            return false
+        else{
+            return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        }
     }
 }
